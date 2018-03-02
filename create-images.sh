@@ -1,14 +1,56 @@
 #!/bin/bash
 
-if [ -z "${TAG}" ]; then
-  echo "Missing \$TAG variable"
-  echo "Run example: TAG=1.0 ./create-images"
-  exit 1
+function usage() {
+  [[ -n "${1}" ]] && echo "${1}"
+
+  cat <<EOF
+Usage: ${BASH_SOURCE[0]} [options ...]"
+  options:
+    -t <TAG>  TAG to use for operations on images, required.
+    -b        Build images
+    -d        Delete images
+    -p        Push images
+
+At least one of -b, -d or -p is required.
+EOF
+  exit 2
+}
+
+
+while getopts ":t:bdp" opt; do
+  case ${opt} in
+    t) TAG="${OPTARG}";;
+    b) BUILD=true;;
+    d) DELETE=true;;
+    p) PUSH=true;;
+    *) usage;;
+  esac
+done
+
+[[ -z "${TAG}" ]] && usage "Missing TAG"
+[[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
+
+IMAGES="istio-ca pilot mixer sidecar-injector proxy-init"
+
+if [ -n "${DELETE}" ]; then
+  for image in ${IMAGES}; do
+    echo "Deleting image ${image}..."
+    docker rmi openshiftistio/${image}-centos7:${TAG}
+  done
 fi
 
-for image in istio-ca pilot mixer sidecar-injector proxy-init; do
-  echo "Building ${image}..."
-  docker build -t openshiftistio/${image}-centos7:${TAG} -f Dockerfile.${image} .
-  echo "Done"
-  echo
-done
+if [ -n "${BUILD}" ]; then
+  for image in ${IMAGES}; do
+    echo "Building ${image}..."
+    docker build -t openshiftistio/${image}-centos7:${TAG} -f Dockerfile.${image} .
+    echo "Done"
+    echo
+  done
+fi
+
+if [ -n "${PUSH}" ]; then
+  for image in ${IMAGES}; do
+    echo "Pushing image ${image}..."
+    docker push openshiftistio/${image}-centos7:${TAG}
+  done
+fi
