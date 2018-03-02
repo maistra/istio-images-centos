@@ -22,4 +22,4 @@ Example: if you want to build local images (`-b`) but want do remove (untag) pre
 ```sh
 ./create-images.sh -t my-tag -b -d -p
 ```
-Run `create-images.sh -h` to see all the options.
+Run `./create-images.sh` to see all the options.
