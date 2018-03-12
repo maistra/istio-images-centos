@@ -7,4 +7,4 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio/rep
 
 WORKDIR /tmp/
 
-ENTRYPOINT [ "/usr/bin/istio_ca", "--self-signed-ca" ]
+ENTRYPOINT [ "/usr/local/bin/istio_ca", "--self-signed-ca" ]

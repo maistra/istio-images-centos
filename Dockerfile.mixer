@@ -7,5 +7,5 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio/rep
 
 WORKDIR /tmp/
 
-ENTRYPOINT ["/usr/bin/mixs", "server"]
+ENTRYPOINT ["/usr/local/bin/mixs", "server"]
 CMD ["--configStoreURL=fs:///etc/opt/mixer/configroot","--configStoreURL=k8s://","--logtostderr","--v=2"]
