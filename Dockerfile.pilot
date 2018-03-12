@@ -7,4 +7,4 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio-dai
 
 WORKDIR /tmp/
 
-ENTRYPOINT [ "/usr/bin/pilot-discovery" ]
+ENTRYPOINT [ "/usr/local/bin/pilot-discovery" ]
