@@ -33,7 +33,7 @@ done
 [[ -z "${TAG}" ]] && usage "Missing TAG"
 [[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
 
-IMAGES="istio-ca pilot mixer sidecar-injector proxy-init"
+IMAGES="istio-ca pilot mixer sidecar-injector proxy-init proxy"
 
 if [ -n "${DELETE}" ]; then
   for image in ${IMAGES}; do
