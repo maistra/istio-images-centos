@@ -5,10 +5,14 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio-dai
     yum install -y istio-proxy istio-pilot-agent && \
     yum clean all
 
-ADD artifacts/envoy_mixer* /etc/istio/proxy/
-ADD artifacts/envoy_pilot* /etc/istio/proxy/
-ADD artifacts/envoy_bootstrap_tmpl.json /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
+ADD artifacts/envoy_pilot.yaml.tmpl /etc/istio/proxy/envoy_pilot.yaml.tmpl
+ADD artifacts/envoy_policy.yaml.tmpl /etc/istio/proxy/envoy_policy.yaml.tmpl
+ADD artifacts/envoy_telemetry.yaml.tmpl /etc/istio/proxy/envoy_telemetry.yaml.tmpl
 
-WORKDIR /tmp/
+COPY artifacts/envoy_bootstrap_tmpl.json /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
 
-ENTRYPOINT [ "/usr/local/bin/pilot-agent" ]
+# Allow non-root user to run envoy.
+RUN chmod 755 /usr/local/bin/envoy
+
+# The pilot-agent will bootstrap Envoy.
+ENTRYPOINT ["/usr/local/bin/pilot-agent"]
