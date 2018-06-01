@@ -1,7 +1,7 @@
 FROM centos:7
 
 RUN yum upgrade -y && \
-    yum install -y iptables && \
+    yum install -y iptables iproute && \
     yum clean all
 
 WORKDIR /tmp/
