@@ -1,11 +1,10 @@
 FROM centos:7
 
 RUN yum upgrade -y && \
-    yum install -y iptables && \
+    yum install -y iptables iproute && \
     yum clean all
 
 WORKDIR /tmp/
 
-ADD artifacts/prepare_proxy.sh /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/prepare_proxy.sh"]
-
+ADD artifacts/istio-iptables.sh /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/istio-iptables.sh"]

@@ -7,4 +7,7 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio/rep
 
 WORKDIR /tmp/
 
+# Workaround for https://github.com/istio/istio/pull/5798
+RUN ln -s /etc/pki/tls/cert.pem /cacert.pem
+
 ENTRYPOINT [ "/usr/local/bin/pilot-discovery" ]

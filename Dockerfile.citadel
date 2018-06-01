@@ -2,7 +2,7 @@ FROM centos:7
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-7.repo && \
     yum upgrade -y && \
-    yum install -y istio-ca && \
+    yum install -y istio-citadel && \
     yum clean all
 
 WORKDIR /tmp/
