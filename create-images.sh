@@ -45,7 +45,7 @@ fi
 if [ -n "${BUILD}" ]; then
   for image in ${IMAGES}; do
     echo "Building ${image}..."
-    docker build -t ${HUB}/${image}-centos7:${TAG} -f Dockerfile.${image} .
+    docker build --no-cache -t ${HUB}/${image}-centos7:${TAG} -f Dockerfile.${image} .
     echo "Done"
     echo
   done
