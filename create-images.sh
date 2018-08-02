@@ -7,7 +7,7 @@ function usage() {
 Usage: ${BASH_SOURCE[0]} [options ...]"
   options:
     -t <TAG>  TAG to use for operations on images, required.
-    -h <HUB>  Docker hub + username. Defaults to "docker.io/openshiftistio"
+    -h <HUB>  Docker hub + username. Defaults to "docker.io/maistra"
     -b        Build images
     -d        Delete images
     -p        Push images
@@ -17,7 +17,7 @@ EOF
   exit 2
 }
 
-HUB="docker.io/openshiftistio"
+HUB="docker.io/maistra"
 
 while getopts ":t:h:bdp" opt; do
   case ${opt} in
@@ -33,7 +33,7 @@ done
 [[ -z "${TAG}" ]] && usage "Missing TAG"
 [[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
 
-IMAGES="citadel pilot mixer sidecar-injector proxy-init galley proxy proxyv2"
+IMAGES="citadel pilot mixer sidecar-injector proxy-init galley proxyv2"
 
 if [ -n "${DELETE}" ]; then
   for image in ${IMAGES}; do
