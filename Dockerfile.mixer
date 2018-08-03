@@ -1,6 +1,6 @@
 FROM centos:7
 
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/openshift-istio/istio-daily/repo/epel-7/group_openshift-istio-istio-daily-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-daily-epel-7.repo && \
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-daily/repo/epel-7/group_openshift-istio-istio-daily-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-daily-epel-7.repo && \
     yum upgrade -y && \
     yum install -y istio-mixs && \
     yum clean all
