@@ -33,7 +33,7 @@ done
 [[ -z "${TAG}" ]] && usage "Missing TAG"
 [[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
 
-IMAGES="citadel pilot mixer sidecar-injector proxy-init galley proxyv2"
+IMAGES="citadel pilot mixer sidecar-injector proxy-init galley istio-operator proxyv2"
 
 if [ -n "${DELETE}" ]; then
   for image in ${IMAGES}; do

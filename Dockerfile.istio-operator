@@ -1,0 +1,7 @@
+FROM centos:7
+ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-daily/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-7.repo && \
+    yum upgrade -y && \
+    yum install -y istio-operator-0.1.0-5.el7 && \
+    yum clean all
+ WORKDIR /tmp/
+ ENTRYPOINT [ "/usr/local/bin/istio-operator"]
