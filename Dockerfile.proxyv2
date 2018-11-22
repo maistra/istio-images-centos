@@ -2,8 +2,8 @@ FROM centos:7
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
-LABEL version="0.4.0"
-LABEL istio_version="1.0.3"
+LABEL version="0.5.0"
+LABEL istio_version="1.0.4"
 LABEL summary="Maistra Proxy V2 OpenShift container image"
 LABEL description="Maistra Istio Proxy V2 OpenShift container image"
 LABEL io.k8s.display-name="Maistra Istio Proxy V2"
@@ -11,11 +11,11 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services=""
 ENV container="oci"
-ENV ISTIO_VERSION=1.0.3
+ENV ISTIO_VERSION=1.0.4
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/maistra-istio-epel-7.repo && \
     yum upgrade -y && \
-    yum install -y istio-proxy-0.4.0-1.el7 istio-pilot-agent-0.4.0-1.el7 && \
+    yum install -y istio-proxy-0.5.0-1.el7 istio-pilot-agent-0.5.0-1.el7 && \
     yum clean all
 
 # pilot-agent and envoy may run with effective uid 0 in order to run envoy with
