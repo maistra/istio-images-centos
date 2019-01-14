@@ -6,12 +6,12 @@ function usage() {
   cat <<EOF
 Usage: ${BASH_SOURCE[0]} [options ...]"
   options:
-    -t <TAG>  TAG to use for operations on images, required.
-    -h <HUB>  Docker hub + username. Defaults to "docker.io/maistra"
-		-i <IMAGES> Specify which images should be built
-    -b        Build images
-    -d        Delete images
-    -p        Push images
+    -t <TAG>    TAG to use for operations on images, required.
+    -h <HUB>    Docker hub + username. Defaults to "docker.io/maistra"
+    -i <IMAGES> Specify which images should be built
+    -b          Build images
+    -d          Delete images
+    -p          Push images
 
 At least one of -b, -d or -p is required.
 EOF
@@ -29,7 +29,7 @@ while getopts ":t:h:bdp" opt; do
     b) BUILD=true;;
     d) DELETE=true;;
     p) PUSH=true;;
-		i) IMAGES="${OPTARG}";;
+    i) IMAGES="${OPTARG}";;
     *) usage;;
   esac
 done
