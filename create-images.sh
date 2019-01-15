@@ -19,7 +19,7 @@ EOF
 }
 
 HUB="docker.io/maistra"
-DEFAULT_IMAGES="citadel pilot mixer sidecar-injector proxy-init galley istio-operator proxyv2"
+DEFAULT_IMAGES="citadel pilot mixer sidecar-injector proxy-init galley istio-operator proxyv2 ior"
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 
 if [ -z "${CONTAINER_CLI}" ]; then
