@@ -8,7 +8,7 @@ Usage: ${BASH_SOURCE[0]} [options ...]"
   options:
     -t <TAG>  TAG to use for operations on images, required.
     -h <HUB>  Docker hub + username. Defaults to "docker.io/maistra"
-		-i <IMAGES> Specify which images should be built
+    -i <IMAGES> Specify which images should be built
     -b        Build images
     -d        Delete images
     -p        Push images
@@ -22,14 +22,14 @@ HUB="docker.io/maistra"
 DEFAULT_IMAGES="citadel pilot mixer sidecar-injector proxy-init galley istio-operator proxyv2"
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 
-while getopts ":t:h:bdp" opt; do
+while getopts ":t:h:i:bdp" opt; do
   case ${opt} in
     t) TAG="${OPTARG}";;
     h) HUB="${OPTARG}";;
     b) BUILD=true;;
     d) DELETE=true;;
     p) PUSH=true;;
-		i) IMAGES="${OPTARG}";;
+    i) IMAGES="${OPTARG}";;
     *) usage;;
   esac
 done
