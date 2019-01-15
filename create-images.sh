@@ -22,7 +22,7 @@ HUB="docker.io/maistra"
 DEFAULT_IMAGES="citadel pilot mixer sidecar-injector proxy-init galley istio-operator proxyv2"
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 
-while getopts ":t:h:bdp" opt; do
+while getopts ":t:h:i:bdp" opt; do
   case ${opt} in
     t) TAG="${OPTARG}";;
     h) HUB="${OPTARG}";;
