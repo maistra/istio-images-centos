@@ -28,6 +28,11 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7
 # chgrp 1337 /usr/local/bin/envoy /usr/local/bin/pilot-agent && \
 # chmod 2755 /usr/local/bin/envoy /usr/local/bin/pilot-agent
 
+# allow running the container with a random uid, as long as it's a member of the root group
+# (as is the case when running in openshift without the "anyuid" security context constraint)
+RUN mkdir -p /etc/istio/proxy && \
+    chmod g+w /etc/istio/proxy
+
 ADD artifacts/envoy_pilot.yaml.tmpl /etc/istio/proxy/envoy_pilot.yaml.tmpl
 ADD artifacts/envoy_policy.yaml.tmpl /etc/istio/proxy/envoy_policy.yaml.tmpl
 ADD artifacts/envoy_telemetry.yaml.tmpl /etc/istio/proxy/envoy_telemetry.yaml.tmpl
