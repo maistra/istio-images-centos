@@ -39,6 +39,7 @@ ADD artifacts/envoy_telemetry.yaml.tmpl /etc/istio/proxy/envoy_telemetry.yaml.tm
 ADD artifacts/istio-iptables.sh /usr/local/bin/istio-iptables.sh
 
 COPY artifacts/envoy_bootstrap_v2.json /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
+COPY artifacts/envoy_bootstrap_drain.json /var/lib/istio/envoy/envoy_bootstrap_drain.json
 
 # Sudoers used to allow tcpdump and other debug utilities.
 RUN useradd -m --uid 1337 istio-proxy && \
