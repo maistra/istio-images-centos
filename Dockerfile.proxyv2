@@ -2,8 +2,8 @@ FROM centos:7
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
-LABEL version="0.8.0"
-LABEL istio_version="1.1.0-snapshot.6"
+LABEL version="0.9.0"
+LABEL istio_version="1.1.0-rc2"
 LABEL summary="Maistra Proxy V2 OpenShift container image"
 LABEL description="Maistra Istio Proxy V2 OpenShift container image"
 LABEL io.k8s.display-name="Maistra Istio Proxy V2"
@@ -11,18 +11,18 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services=""
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.0-snapshot.6
+ENV ISTIO_VERSION=1.1.0-rc2
 
 # Environment variables indicating this proxy's version/capabilities as opaque string
 ENV ISTIO_META_ISTIO_PROXY_VERSION "1.1.0"
 # Environment variable indicating the exact proxy sha - for debugging or version-specific configs
-ENV ISTIO_META_ISTIO_PROXY_SHA ea5e8afb79fc1864c244d397192e06513b918f49
+ENV ISTIO_META_ISTIO_PROXY_SHA f95f8530df5b6b71c163bf23c7bd2e2a3501382d
 # Environment variable indicating the exact build, for debugging
-ENV ISTIO_META_ISTIO_VERSION maistra-0.8.0
+ENV ISTIO_META_ISTIO_VERSION maistra-0.9.0
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/maistra-istio-epel-7.repo && \
     yum upgrade -y && \
-    yum install -y istio-proxy-0.8.0-1.el7 istio-pilot-agent-0.8.0-2.el7 && \
+    yum install -y istio-proxy-0.9.0-1.el7 istio-pilot-agent-0.9.0-1.el7 && \
     yum clean all
 
 # pilot-agent and envoy may run with effective uid 0 in order to run envoy with
