@@ -2,8 +2,8 @@ FROM centos:7
 
 LABEL com.redhat.component="maistra-pilot-container"
 LABEL name="maistra/pilot"
-LABEL version="0.8.0"
-LABEL istio_version="1.1.0-snapshot.6"
+LABEL version="0.9.0"
+LABEL istio_version="1.1.0-rc2"
 LABEL summary="Red Hat Istio Pilot OpenShift container image"
 LABEL description="Red Hat Istio Pilot OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Pilot"
@@ -11,11 +11,11 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services="15003:tcp,15005:tcp,15007:tcp,15010:tcp,15011:tcp,8080:tcp,9093:tcp"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.0-snapshot.6
+ENV ISTIO_VERSION=1.1.0-rc2
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-7.repo && \
     yum upgrade -y && \
-    yum install -y istio-pilot-discovery-0.8.0-2.el7 && \
+    yum install -y istio-pilot-discovery-0.9.0-1.el7 && \
     yum clean all
 
 WORKDIR /tmp/
