@@ -16,13 +16,13 @@ ENV ISTIO_VERSION=1.1.0-rc2
 # Environment variables indicating this proxy's version/capabilities as opaque string
 ENV ISTIO_META_ISTIO_PROXY_VERSION "1.1.0"
 # Environment variable indicating the exact proxy sha - for debugging or version-specific configs
-ENV ISTIO_META_ISTIO_PROXY_SHA f95f8530df5b6b71c163bf23c7bd2e2a3501382d
+ENV ISTIO_META_ISTIO_PROXY_SHA 5c494348b336f4d3b793b86c4ab696a9c0d43417 
 # Environment variable indicating the exact build, for debugging
 ENV ISTIO_META_ISTIO_VERSION maistra-0.9.0
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/maistra-istio-epel-7.repo && \
     yum upgrade -y && \
-    yum install -y istio-proxy-0.9.0-1.el7 istio-pilot-agent-0.9.0-1.el7 && \
+    yum install -y istio-proxy-0.9.0-2.el7 istio-pilot-agent-0.9.0-1.el7 && \
     yum clean all
 
 # pilot-agent and envoy may run with effective uid 0 in order to run envoy with
