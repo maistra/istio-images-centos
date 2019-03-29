@@ -3,7 +3,7 @@ FROM centos:7
 LABEL com.redhat.component="maistra-galley-container"
 LABEL name="maistra/galley"
 LABEL version="0.10.0"
-LABEL istio_version="1.1.0"
+LABEL istio_version="1.1.1"
 LABEL summary="Red Hat Istio Galley OpenShift container image"
 LABEL description="Red Hat Istio Galley OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Galley"
@@ -11,7 +11,7 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services="80:tcp,443:tcp"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.0
+ENV ISTIO_VERSION=1.1.1
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-7.repo && \
     yum upgrade -y && \
