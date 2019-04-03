@@ -3,7 +3,7 @@ FROM centos:7
 LABEL com.redhat.component="maistra-sidecar-injector-container"
 LABEL name="maistra/sidecar-injector"
 LABEL version="0.10.0"
-LABEL istio_version="1.1.1"
+LABEL istio_version="1.1.2"
 LABEL summary="Maistra Sidecar Injector OpenShift container image"
 LABEL description="Maistra Sidecar Injector OpenShift container image"
 LABEL io.k8s.display-name="Maistra Sidecar Injector"
@@ -11,7 +11,7 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services="443:tcp"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.1
+ENV ISTIO_VERSION=1.1.2
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-7.repo && \
     yum upgrade -y && \
