@@ -43,7 +43,7 @@ done
 if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
 		echo "Deleting image ${image}..."
-		${CONTAINER_CLI} rmi ${HUB}/${image}-centos7:${TAG}
+		${CONTAINER_CLI} rmi ${HUB}/${image}-ubi8:${TAG}
 	done
 fi
 
