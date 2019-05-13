@@ -1,4 +1,4 @@
-FROM ubi8-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-pilot-container"
 LABEL name="maistra/pilot-ubi8"
@@ -14,7 +14,7 @@ ENV container="oci"
 ENV ISTIO_VERSION=1.1.5
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
-    microdnf upgrade -y && \
+    microdnf update -y && \
     microdnf install -y istio-pilot-discovery-0.11.0 && \
     microdnf clean all
 

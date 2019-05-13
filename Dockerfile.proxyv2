@@ -1,4 +1,4 @@
-FROM ubi8-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
@@ -24,7 +24,7 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rh
 
 RUN mv /etc/yum.repos.d/ubi.repo /ubi.repo
 
-RUN microdnf upgrade -y && \
+RUN microdnf update -y && \
     microdnf install -y istio-proxy-0.11.0 istio-pilot-agent-0.11.0 && \
     microdnf clean all
 

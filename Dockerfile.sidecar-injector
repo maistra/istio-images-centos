@@ -14,7 +14,7 @@ ENV container="oci"
 ENV ISTIO_VERSION=1.1.5
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
-    microdnf upgrade -y && \
+    microdnf update -y && \
     microdnf install -y istio-sidecar-injector-0.11.0 && \
     microdnf clean all
 

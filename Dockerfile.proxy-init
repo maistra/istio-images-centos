@@ -1,4 +1,4 @@
-FROM ubi8-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-proxy-init-container"
 LABEL name="maistra/proxy-init-ubi8"
@@ -13,7 +13,7 @@ LABEL io.openshift.expose-services=""
 ENV container="oci"
 ENV ISTIO_VERSION=1.1.5
 
-RUN microdnf upgrade -y && \
+RUN microdnf update -y && \
     microdnf install -y iptables iproute && \
     microdnf clean all
 
