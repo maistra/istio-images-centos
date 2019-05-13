@@ -1,4 +1,4 @@
-FROM ubi8-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-sidecar-injector-container"
 LABEL name="maistra/sidecar-injector"
