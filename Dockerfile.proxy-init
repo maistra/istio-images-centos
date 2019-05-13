@@ -1,9 +1,9 @@
-FROM centos:7
+FROM ubi8-minimal:latest
 
 LABEL com.redhat.component="maistra-proxy-init-container"
-LABEL name="maistra/proxy-init"
-LABEL version="0.9.0"
-LABEL istio_version="1.1.2"
+LABEL name="maistra/proxy-init-ubi8"
+LABEL version="0.11.0"
+LABEL istio_version="1.1.5"
 LABEL summary="Maistra Proxy Init OpenShift container image"
 LABEL description="Maistra Proxy Init OpenShift container image"
 LABEL io.k8s.display-name="Maistra Proxy Init"
@@ -11,11 +11,11 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services=""
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.2
+ENV ISTIO_VERSION=1.1.5
 
-RUN yum upgrade -y && \
-    yum install -y iptables iproute && \
-    yum clean all
+RUN microdnf upgrade -y && \
+    microdnf install -y iptables iproute && \
+    microdnf clean all
 
 WORKDIR /tmp/
 

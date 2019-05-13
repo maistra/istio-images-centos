@@ -1,9 +1,9 @@
-FROM centos:7
+FROM ubi8-minimal:latest
 
 LABEL com.redhat.component="maistra-sidecar-injector-container"
 LABEL name="maistra/sidecar-injector"
-LABEL version="0.10.0"
-LABEL istio_version="1.1.2"
+LABEL version="0.11.0"
+LABEL istio_version="1.1.5"
 LABEL summary="Maistra Sidecar Injector OpenShift container image"
 LABEL description="Maistra Sidecar Injector OpenShift container image"
 LABEL io.k8s.display-name="Maistra Sidecar Injector"
@@ -11,12 +11,12 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services="443:tcp"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.2
+ENV ISTIO_VERSION=1.1.5
 
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_openshift-istio-istio-epel-7.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-7.repo && \
-    yum upgrade -y && \
-    yum install -y istio-sidecar-injector-0.10.0 && \
-    yum clean all
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
+    microdnf upgrade -y && \
+    microdnf install -y istio-sidecar-injector-0.11.0 && \
+    microdnf clean all
 
 WORKDIR /tmp/
 

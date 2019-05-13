@@ -19,7 +19,7 @@ exit 2
 }
 
 HUB="docker.io/maistra"
-DEFAULT_IMAGES="citadel pilot mixer sidecar-injector proxy-init galley istio-operator proxyv2 ior"
+DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxyv2"
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 
 
@@ -43,14 +43,14 @@ done
 if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
 		echo "Deleting image ${image}..."
-		${CONTAINER_CLI} rmi ${HUB}/${image}-ubi8:${TAG}
+		${CONTAINER_CLI} rmi ${HUB}/${image}:${TAG}
 	done
 fi
 
 if [ -n "${BUILD}" ]; then
 	for image in ${IMAGES}; do
 		echo "Building ${image}..."
-		${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}-centos7:${TAG} -f Dockerfile.${image} .
+		${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}:${TAG} -f Dockerfile.${image} .
 		echo "Done"
 		echo
 	done
@@ -59,6 +59,6 @@ fi
 if [ -n "${PUSH}" ]; then
 	for image in ${IMAGES}; do
 		echo "Pushing image ${image}..."
-		${CONTAINER_CLI} push ${HUB}/${image}-centos7:${TAG}
+		${CONTAINER_CLI} push ${HUB}/${image}:${TAG}
 	done
 fi

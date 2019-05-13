@@ -1,4 +1,4 @@
-FROM ubi8:latest
+FROM ubi8-minimal:latest
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
@@ -24,9 +24,9 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rh
 
 RUN mv /etc/yum.repos.d/ubi.repo /ubi.repo
 
-RUN yum upgrade -y && \
-    yum install -y istio-proxy-0.11.0 istio-pilot-agent-0.11.0 && \
-    yum clean all
+RUN microdnf upgrade -y && \
+    microdnf install -y istio-proxy-0.11.0 istio-pilot-agent-0.11.0 && \
+    microdnf clean all
 
 # pilot-agent and envoy may run with effective uid 0 in order to run envoy with
 # CAP_NET_ADMIN, so any iptables rule matching on "-m owner --uid-owner
@@ -50,11 +50,6 @@ ADD artifacts/istio-iptables.sh /usr/local/bin/istio-iptables.sh
 
 COPY artifacts/envoy_bootstrap_v2.json /var/lib/istio/envoy/envoy_bootstrap_tmpl.json
 COPY artifacts/envoy_bootstrap_drain.json /var/lib/istio/envoy/envoy_bootstrap_drain.json
-
-# Sudoers used to allow tcpdump and other debug utilities.
-RUN useradd -m --uid 1337 istio-proxy && \
-    echo "istio-proxy ALL=NOPASSWD: ALL" >> /etc/sudoers && \
-    chown -R istio-proxy /var/lib/istio
 
 # The pilot-agent will bootstrap Envoy.
 ENTRYPOINT ["/usr/local/bin/pilot-agent"]
