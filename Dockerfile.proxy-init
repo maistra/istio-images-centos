@@ -14,7 +14,7 @@ ENV container="oci"
 ENV ISTIO_VERSION=1.1.5
 
 RUN microdnf update -y && \
-    microdnf install -y iptables iproute && \
+    microdnf install -y iptables iproute hostname && \
     microdnf clean all
 
 WORKDIR /tmp/
