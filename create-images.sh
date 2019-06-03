@@ -44,6 +44,9 @@ if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
 		echo "Deleting image ${image}..."
 		${CONTAINER_CLI} rmi ${HUB}/${image}-ubi8:${TAG}
+		if [ "${image}" = "proxy-init" ] ; then
+			${CONTAINER_CLI} rmi ${HUB}/${image}-centos7:${TAG}
+		fi
 	done
 fi
 
@@ -51,6 +54,9 @@ if [ -n "${BUILD}" ]; then
 	for image in ${IMAGES}; do
 		echo "Building ${image}..."
 		${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}-ubi8:${TAG} -f Dockerfile.${image} .
+		if [ "${image}" = "proxy-init" ] ; then
+			${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}-centos7:${TAG} -f Dockerfile.${image}.centos .
+		fi
 		echo "Done"
 		echo
 	done
@@ -60,5 +66,8 @@ if [ -n "${PUSH}" ]; then
 	for image in ${IMAGES}; do
 		echo "Pushing image ${image}..."
 		${CONTAINER_CLI} push ${HUB}/${image}-ubi8:${TAG}
+		if [ "${image}" = "proxy-init" ] ; then
+			${CONTAINER_CLI} push ${HUB}/${image}-centos7:${TAG}
+		fi
 	done
 fi
