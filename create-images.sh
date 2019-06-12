@@ -19,7 +19,7 @@ exit 2
 }
 
 function suffix() {
-  if [ "${1}" = "istio-must-gather" ]; then
+  if [ "${1}" = "istio-must-gather" -o "${1}" = "proxy-init-centos7" ]; then
     return
   fi
 
@@ -27,7 +27,7 @@ function suffix() {
 }
 
 HUB="docker.io/maistra"
-DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxyv2 istio-must-gather"
+DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxy-init-centos7 proxyv2 istio-must-gather"
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 
 
@@ -52,9 +52,6 @@ if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
 		echo "Deleting image ${image}..."
 		${CONTAINER_CLI} rmi ${HUB}/${image}$(suffix ${image}):${TAG}
-		if [ "${image}" = "proxy-init" ] ; then
-			${CONTAINER_CLI} rmi ${HUB}/${image}-centos7:${TAG}
-		fi
 	done
 fi
 
@@ -62,9 +59,6 @@ if [ -n "${BUILD}" ]; then
 	for image in ${IMAGES}; do
 		echo "Building ${image}..."
 		${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}$(suffix ${image}):${TAG} -f Dockerfile.${image} .
-		if [ "${image}" = "proxy-init" ] ; then
-			${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}-centos7:${TAG} -f Dockerfile.${image}.centos .
-		fi
 		echo "Done"
 		echo
 	done
@@ -74,8 +68,5 @@ if [ -n "${PUSH}" ]; then
 	for image in ${IMAGES}; do
 		echo "Pushing image ${image}..."
 		${CONTAINER_CLI} push ${HUB}/${image}$(suffix ${image}):${TAG}
-		if [ "${image}" = "proxy-init" ] ; then
-			${CONTAINER_CLI} push ${HUB}/${image}-centos7:${TAG}
-		fi
 	done
 fi
