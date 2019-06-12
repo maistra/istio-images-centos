@@ -15,7 +15,11 @@ If you don't want to follow this naming, you can always build them individually,
 docker build -t my-pilot:my-tag -f Dockerfile.pilot .
 ```
 
-## Helper script
+## Helper scripts
+### update-artifacts.sh
+Before creating images you probably want to grab the latest artifacts from their repos. `update-artifacts.sh` will do that for you. Just run it and newer artifacts will be downloaded into the `artifacts` dir, ready to be consumed by the `Dockerfile`s.
+
+### create-images.sh
 `create-images.sh` is able to do more than just, say, creating images. It supports removal (untagging), building and pushing of images.
 
 Example: if you want to build local images (`-b`) but want do remove (untag) previously existing local images (`-d`) first, and after building, you want to push (`-p`) them, run:
