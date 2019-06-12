@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 LABEL com.redhat.component="maistra-galley-container"
 LABEL name="maistra/galley-ubi8"
 LABEL version="0.12.0"
-LABEL istio_version="1.1.7"
+LABEL istio_version="1.1.8"
 LABEL summary="Red Hat Istio Galley OpenShift container image"
 LABEL description="Red Hat Istio Galley OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Galley"
@@ -11,7 +11,7 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services="80:tcp,443:tcp"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.7
+ENV ISTIO_VERSION=1.1.8
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
     microdnf update -y && \

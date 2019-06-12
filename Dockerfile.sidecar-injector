@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 LABEL com.redhat.component="maistra-sidecar-injector-container"
 LABEL name="maistra/sidecar-injector"
 LABEL version="0.12.0"
-LABEL istio_version="1.1.7"
+LABEL istio_version="1.1.8"
 LABEL summary="Maistra Sidecar Injector OpenShift container image"
 LABEL description="Maistra Sidecar Injector OpenShift container image"
 LABEL io.k8s.display-name="Maistra Sidecar Injector"
@@ -11,7 +11,7 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services="443:tcp"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.7
+ENV ISTIO_VERSION=1.1.8
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
     microdnf update -y && \
