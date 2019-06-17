@@ -29,7 +29,7 @@ function suffix() {
 }
 
 HUB="docker.io/maistra"
-DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxy-init-centos7 proxyv2 istio-must-gather prometheus grafana"
+DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxy-init-centos7 proxyv2 istio-must-gather istio-cni prometheus grafana"
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 
 
