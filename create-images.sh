@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function usage() {
 	[[ -n "${1}" ]] && echo "${1}"
 
