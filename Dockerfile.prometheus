@@ -1,0 +1,31 @@
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+
+LABEL com.redhat.component="maistra-prometheus-container"
+LABEL name="maistra/prometheus-ubi8"
+LABEL version="2.7.2"
+LABEL istio_version="1.1.8"
+LABEL summary="Red Hat Prometheus OpenShift container image"
+LABEL description="Red Hat Prometheus OpenShift container image"
+LABEL io.k8s.display-name="Red Hat Prometheus"
+LABEL io.openshift.tags="istio"
+LABEL io.openshift.expose-services="9090"
+LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
+ENV container="oci"
+ENV ISTIO_VERSION=1.1.8
+
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/prometheus/repo/epel-7/group_maistra-prometheus-epel-7.repo -o /etc/yum.repos.d/openshift-istio-prometheus-epel-7.repo && \
+    microdnf update -y && \
+    microdnf install -y prometheus-2.7.2 && \
+    microdnf clean all
+
+RUN mkdir -p /prometheus && \
+    chgrp -R 0 /prometheus && \
+    chmod -R g=u /prometheus
+
+EXPOSE     9090
+WORKDIR /prometheus
+ENTRYPOINT [ "/bin/prometheus" ]
+CMD        [ "--config.file=/etc/prometheus/prometheus.yml", \
+             "--storage.tsdb.path=/prometheus", \
+             "--web.console.libraries=/usr/share/prometheus/console_libraries", \
+             "--web.console.templates=/usr/share/prometheus/consoles" ]
