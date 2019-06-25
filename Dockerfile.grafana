@@ -1,0 +1,41 @@
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+
+LABEL com.redhat.component="maistra-grafana-container"
+LABEL name="maistra/grafana-ubi8"
+LABEL version="6.2.2"
+LABEL istio_version="1.1.8"
+LABEL summary="Red Hat Grafana OpenShift container image"
+LABEL description="Red Hat Grafana OpenShift container image"
+LABEL io.k8s.display-name="Red Hat Grafana"
+LABEL io.openshift.tags="istio"
+LABEL io.openshift.expose-services="3000"
+LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
+ENV container="oci"
+ENV ISTIO_VERSION=1.1.8
+
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/grafana/repo/epel-7/group_maistra-grafana-epel-7.repo -o /etc/yum.repos.d/openshift-istio-grafana-epel-7.repo && \
+    microdnf update -y && \
+    microdnf install -y grafana-6.2.2 grafana-prometheus-6.2.2 && \
+    microdnf clean all
+
+ENV GF_PATHS_HOME="/usr/share/grafana"
+ENV GF_PATHS_CONFIG="/etc/grafana/grafana.ini
+ENV GF_PATHS_LOGS="/var/log/grafana"
+ENV GF_PATHS_PLUGINS="/var/lib/grafana/plugins"
+ENV GF_PATHS_PROVISIONING="/etc/grafana/provisioning"
+ENV GF_PATHS_DATA="/var/lib/grafana"
+
+RUN chgrp -R 0 ${GF_PATHS_CONFIG} ${GF_PATHS_HOME} ${GF_PATHS_LOGS} ${GF_PATHS_PLUGINS} ${GF_PATHS_DATA} && \
+    chmod -R g=u ${GF_PATHS_CONFIG} ${GF_PATHS_HOME} ${GF_PATHS_LOGS} ${GF_PATHS_PLUGINS} ${GF_PATHS_DATA}
+
+EXPOSE 3000
+WORKDIR $GF_PATHS_HOME
+ENTRYPOINT [ "/usr/sbin/grafana-server" ]
+CMD        [ "--config=GF_PATHS_CONFIG", \
+             "--homepath=$GF_PATHS_HOME, \
+             "--packaging=docker", \
+             "cfg:default.log.mode="console", \
+             "cfg:default.paths.logs=$GF_PATHS_LOGS", \
+             "cfg:default.paths.data=$GF_PATHS_DATA", \
+             "cfg:default.paths.plugins=$GF_PATHS_PLUGINS", \
+             "cfg:default.paths.provisioning=$GF_PATHS_PROVISIONING" ]   
