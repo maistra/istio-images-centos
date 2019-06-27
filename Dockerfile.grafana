@@ -19,7 +19,7 @@ RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/grafana/repo/epel
     microdnf clean all
 
 ENV GF_PATHS_HOME="/usr/share/grafana"
-ENV GF_PATHS_CONFIG="/etc/grafana/grafana.ini
+ENV GF_PATHS_CONFIG="/etc/grafana/grafana.ini"
 ENV GF_PATHS_LOGS="/var/log/grafana"
 ENV GF_PATHS_PLUGINS="/var/lib/grafana/plugins"
 ENV GF_PATHS_PROVISIONING="/etc/grafana/provisioning"
@@ -38,4 +38,4 @@ CMD        [ "--config=GF_PATHS_CONFIG", \
              "cfg:default.paths.logs=$GF_PATHS_LOGS", \
              "cfg:default.paths.data=$GF_PATHS_DATA", \
              "cfg:default.paths.plugins=$GF_PATHS_PLUGINS", \
-             "cfg:default.paths.provisioning=$GF_PATHS_PROVISIONING" ]   
+             "cfg:default.paths.provisioning=$GF_PATHS_PROVISIONING" ]
