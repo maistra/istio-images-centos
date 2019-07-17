@@ -10,6 +10,19 @@ ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-0.12"}
 
 CONTAINER_CLI=${CONTAINER_CLI:-docker}
 
+function verify_podman() {
+  [ "${EUID}" == "0" ] && return
+
+  if [ "${CONTAINER_CLI}" = "podman" ] || ([ "${CONTAINER_CLI}" = "docker" ] && docker --version | grep -q podman) ; then
+    echo "****************************************************************************************"
+    echo
+    echo "You are using podman in rootless mode. Some images may not work in this mode. Aborting."
+    echo
+    echo "****************************************************************************************"
+    exit 1
+  fi
+}
+
 function usage() {
 	[[ -n "${1}" ]] && echo "${1}"
 
@@ -50,40 +63,40 @@ function build_bookinfo() {
   local src="${dir}/samples/bookinfo/src"
 
   pushd "${src}/productpage"
-    docker build -t "${HUB}/examples-bookinfo-productpage-v1:${TAG}" .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-productpage-v1:${TAG}" .
   popd
 
   pushd "${src}/details"
     #plain build -- no calling external book service to fetch topics
-    docker build -t "${HUB}/examples-bookinfo-details-v1:${TAG}" --build-arg service_version=v1 .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-details-v1:${TAG}" --build-arg service_version=v1 .
     #with calling external book service to fetch topic for the book
-    docker build -t "${HUB}/examples-bookinfo-details-v2:${TAG}" --build-arg service_version=v2 --build-arg enable_external_book_service=true .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-details-v2:${TAG}" --build-arg service_version=v2 --build-arg enable_external_book_service=true .
   popd
 
   pushd "${src}/reviews"
     #java build the app.
-    docker run --rm -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
+    ${CONTAINER_CLI} run --rm -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
     pushd reviews-wlpcfg
       #plain build -- no ratings
-      docker build -t "${HUB}/examples-bookinfo-reviews-v1:${TAG}" --build-arg service_version=v1 .
+      ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-reviews-v1:${TAG}" --build-arg service_version=v1 .
       #with ratings black stars
-      docker build -t "${HUB}/examples-bookinfo-reviews-v2:${TAG}" --build-arg service_version=v2 --build-arg enable_ratings=true .
+      ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-reviews-v2:${TAG}" --build-arg service_version=v2 --build-arg enable_ratings=true .
       #with ratings red stars
-      docker build -t "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 --build-arg enable_ratings=true --build-arg star_color=red .
+      ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 --build-arg enable_ratings=true --build-arg star_color=red .
     popd
   popd
 
   pushd "${src}/ratings"
-    docker build -t "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
-    docker build -t "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
   popd
 
   pushd "${src}/mysql"
-    docker build -t "${HUB}/examples-bookinfo-mysqldb:${TAG}" .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-mysqldb:${TAG}" .
   popd
 
   pushd "${src}/mongodb"
-    docker build -t "${HUB}/examples-bookinfo-mongodb:${TAG}" .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-mongodb:${TAG}" .
   popd
 
   rm -rf "${dir}"
@@ -91,11 +104,11 @@ function build_bookinfo() {
 
 function exec_bookinfo_images() {
   local cmd="${1}"
-  local images="$(docker images | grep -E "${HUB}/examples-bookinfo.*$TAG" | awk "{OFS=\":\"; print \$1, \"$TAG\"}")"
+  local images="$(${CONTAINER_CLI} images | grep -E "${HUB}/examples-bookinfo.*$TAG" | awk "{OFS=\":\"; print \$1, \"$TAG\"}")"
   local image
 
   for image in ${images}; do
-    docker "${cmd}" "${image}"
+    ${CONTAINER_CLI} "${cmd}" "${image}"
   done
 }
 
@@ -114,6 +127,8 @@ done
 
 [[ -z "${TAG}" ]] && usage "Missing TAG"
 [[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
+
+verify_podman
 
 if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
