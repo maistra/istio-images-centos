@@ -3,7 +3,8 @@
 set -e
 
 HUB="docker.io/maistra"
-DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxy-init-centos7 proxyv2 istio-must-gather istio-cni prometheus grafana"
+DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init proxy-init-centos7 proxyv2 istio-must-gather istio-cni prometheus grafana istio-operator"
+
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 ISTIO_REPO=${ISTIO_REPO:-"https://github.com/Maistra/istio.git"}
 ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-0.12"}
