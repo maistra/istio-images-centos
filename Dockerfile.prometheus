@@ -2,8 +2,8 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-prometheus-container"
 LABEL name="maistra/prometheus-ubi8"
-LABEL version="0.12.0"
-LABEL istio_version="1.1.8"
+LABEL version="1.0.0"
+LABEL istio_version="1.1.11"
 LABEL summary="Red Hat Prometheus OpenShift container image"
 LABEL description="Red Hat Prometheus OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Prometheus"
@@ -11,9 +11,9 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services="9090"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.8
+ENV ISTIO_VERSION=1.1.11
 
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/prometheus/repo/epel-7/group_maistra-prometheus-epel-7.repo -o /etc/yum.repos.d/openshift-istio-prometheus-epel-7.repo && \
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_maistra-prometheus-epel-7.repo -o /etc/yum.repos.d/openshift-istio-prometheus-epel-7.repo && \
     microdnf update -y && \
     microdnf install -y prometheus-2.7.2 && \
     microdnf clean all
