@@ -57,6 +57,16 @@ function suffix() {
   echo "-ubi8"
 }
 
+function get_image_name() {
+  local image="${1}"
+
+  if [ "${image}" = "istio-operator" ]; then
+    echo "${HUB}/istio-ubi8-operator:${TAG}"
+  else
+    echo "${HUB}/${image}$(suffix ${image}):${TAG}"
+  fi
+}
+
 function build_bookinfo() {
   local dir="$(mktemp -d)"
   git clone --depth=1 -b "${ISTIO_BRANCH}" "${ISTIO_REPO}" "${dir}"
@@ -134,7 +144,7 @@ verify_podman
 if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
 		echo "Deleting image ${image}..."
-		${CONTAINER_CLI} rmi ${HUB}/${image}$(suffix ${image}):${TAG}
+		${CONTAINER_CLI} rmi $(get_image_name $image)
 	done
 
 	if [ -n "${BOOKINFO}" ]; then
@@ -145,7 +155,7 @@ fi
 if [ -n "${BUILD}" ]; then
 	for image in ${IMAGES}; do
 		echo "Building ${image}..."
-		${CONTAINER_CLI} build --no-cache -t ${HUB}/${image}$(suffix ${image}):${TAG} -f Dockerfile.${image} .
+		${CONTAINER_CLI} build --no-cache -t $(get_image_name $image) -f Dockerfile.${image} .
 		echo "Done"
 		echo
 	done
@@ -159,7 +169,7 @@ fi
 if [ -n "${PUSH}" ]; then
 	for image in ${IMAGES}; do
 		echo "Pushing image ${image}..."
-		${CONTAINER_CLI} push ${HUB}/${image}$(suffix ${image}):${TAG}
+		${CONTAINER_CLI} push $(get_image_name $image)
 	done
 
 	if [ -n "${BOOKINFO}" ]; then

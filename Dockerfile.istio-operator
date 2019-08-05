@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-istio-operator"
-LABEL name="maistra/istio-operator-ubi8"
+LABEL name="maistra/istio-ubi8-operator"
 LABEL version="1.0.0"
 LABEL istio_version="1.1.11"
 LABEL summary="Red Hat Istio Operator OpenShift container image"
