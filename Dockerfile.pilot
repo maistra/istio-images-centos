@@ -2,8 +2,8 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-pilot-container"
 LABEL name="maistra/pilot-ubi8"
-LABEL version="1.0.0"
-LABEL istio_version="1.1.11"
+LABEL version="1.0.2"
+LABEL istio_version="1.1.17"
 LABEL summary="Red Hat Istio Pilot OpenShift container image"
 LABEL description="Red Hat Istio Pilot OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Pilot"
@@ -11,11 +11,11 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services="15003:tcp,15005:tcp,15007:tcp,15010:tcp,15011:tcp,8080:tcp,9093:tcp"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.11
+ENV ISTIO_VERSION=1.1.17
 
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/epel-8/group_maistra-istio.el8-epel-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
     microdnf update -y && \
-    microdnf install -y istio-pilot-discovery-1.0.0 && \
+    microdnf install -y istio-pilot-discovery-1.0.2 && \
     microdnf clean all
 
 WORKDIR /tmp/
