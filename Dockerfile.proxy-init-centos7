@@ -2,7 +2,7 @@ FROM centos:7
 
 LABEL com.redhat.component="maistra-proxy-init-container"
 LABEL name="maistra/proxy-init"
-LABEL version="1.0.4"
+LABEL version="1.0.5"
 LABEL istio_version="1.1.17"
 LABEL summary="Maistra Proxy Init OpenShift container image"
 LABEL description="Maistra Proxy Init OpenShift container image"

@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
-LABEL version="1.0.4"
+LABEL version="1.0.5"
 LABEL istio_version="1.1.17"
 LABEL summary="Maistra Proxy V2 OpenShift container image"
 LABEL description="Maistra Istio Proxy V2 OpenShift container image"
@@ -18,14 +18,14 @@ ENV ISTIO_META_ISTIO_PROXY_VERSION "1.1.17"
 # Environment variable indicating the exact proxy sha - for debugging or version-specific configs
 ENV ISTIO_META_ISTIO_PROXY_SHA 102e286f1ff6a95195f2bb45a0cda78911884f0b
 # Environment variable indicating the exact build, for debugging
-ENV ISTIO_META_ISTIO_VERSION maistra-1.0.4
+ENV ISTIO_META_ISTIO_VERSION maistra-1.0.5
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/epel-8/group_maistra-istio.el8-epel-8.repo -o /etc/yum.repos.d/maistra-istio-epel-8.repo
 
 RUN mv /etc/yum.repos.d/ubi.repo /ubi.repo
 
 RUN microdnf update -y && \
-    microdnf install -y istio-proxy-1.0.4 istio-pilot-agent-1.0.4 && \
+    microdnf install -y istio-proxy-1.0.5 istio-pilot-agent-1.0.5 && \
     microdnf clean all
 
 # pilot-agent and envoy may run with effective uid 0 in order to run envoy with
