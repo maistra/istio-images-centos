@@ -2,7 +2,7 @@ FROM quay.io/openshift/origin-must-gather:4.1
 
 LABEL com.redhat.component="maistra-istio-must-gather"
 LABEL name="maistra/istio-must-gather"
-LABEL version="1.0.5"
+LABEL version="1.0.6"
 LABEL istio_version="1.1.17"
 LABEL summary="Red Hat Istio Must Gather OpenShift container image"
 LABEL description="Red Hat Istio Must Gather OpenShift container image"
