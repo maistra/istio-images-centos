@@ -2,7 +2,7 @@ FROM centos:centos8
 
 LABEL com.redhat.component="maistra-cni"
 LABEL name="maistra/istio-cni-ubi8"
-LABEL version="1.0.6"
+LABEL version="1.0.8"
 LABEL istio_version="1.1.17"
 LABEL summary="Red Hat Istio-CNI plugin installer OpenShift container image"
 LABEL description="Red Hat Istio-CNI plugin installer OpenShift container image"
@@ -16,7 +16,7 @@ ENV ISTIO_VERSION=1.1.17
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/epel-8/group_maistra-istio.el8-epel-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
     dnf update -y && \
-    dnf install -y jq hostname istio-cni-1.0.6 && \
+    dnf install -y jq hostname istio-cni-1.0.8 && \
     dnf clean all
 WORKDIR /tmp/
 
