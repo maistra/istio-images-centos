@@ -2,8 +2,8 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-cni"
 LABEL name="maistra/istio-cni-ubi8"
-LABEL version="1.0.0"
-LABEL istio_version="1.1.11"
+LABEL version="1.1.0"
+LABEL istio_version="1.4.6"
 LABEL summary="Red Hat Istio-CNI plugin installer OpenShift container image"
 LABEL description="Red Hat Istio-CNI plugin installer OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio-CNI plugin installer"
@@ -11,12 +11,12 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services=""
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.1.11
+ENV ISTIO_VERSION=1.4.6
 
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
     microdnf update -y && \
-    microdnf install -y jq hostname istio-cni-1.0.0 && \
+    microdnf install -y jq hostname istio-cni-1.1.0 && \
     microdnf clean all
 WORKDIR /tmp/
 
