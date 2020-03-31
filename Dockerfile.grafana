@@ -13,9 +13,9 @@ LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
 ENV ISTIO_VERSION=1.4.6
 
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_maistra-grafana-epel-7.repo -o /etc/yum.repos.d/openshift-istio-grafana-epel-7.repo && \
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo -o /etc/yum.repos.d/maistra-1.1-epel-8.repo && \
     microdnf update -y && \
-    microdnf install -y grafana-6.2.2 grafana-prometheus-6.2.2 && \
+    microdnf install -y grafana grafana-prometheus && \
     microdnf clean all
 
 ENV GF_PATHS_HOME="/usr/share/grafana"
