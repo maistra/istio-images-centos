@@ -7,7 +7,7 @@ DEFAULT_IMAGES="citadel pilot mixer sidecar-injector galley istio-ior proxy-init
 
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 ISTIO_REPO=${ISTIO_REPO:-"https://github.com/Maistra/istio.git"}
-ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-0.12"}
+ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-1.1"}
 
 CONTAINER_CLI=${CONTAINER_CLI:-docker}
 
