@@ -13,13 +13,14 @@ LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
 ENV ISTIO_VERSION=1.4.6
 
-
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio.el8/repo/rhelbeta-8/group_maistra-istio.el8-rhelbeta-8.repo -o /etc/yum.repos.d/openshift-istio-istio-epel-8.repo && \
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo -o /etc/yum.repos.d/maistra-1.1-epel-8.repo && \
     microdnf update -y && \
-    microdnf install -y jq hostname istio-cni-1.1.0 && \
+    microdnf install -y hostname istio-cni && \
     microdnf clean all
-WORKDIR /tmp/
+# jq is not available in ubi8 yum repo
+RUN curl -Ls https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/bin/jq && chmod +x /usr/bin/jq
 
+WORKDIR /tmp/
 
 ENV PATH=$PATH:/opt/cni/bin
 VOLUME /opt/cni
