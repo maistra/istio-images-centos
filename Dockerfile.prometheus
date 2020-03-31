@@ -13,9 +13,9 @@ LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
 ENV ISTIO_VERSION=1.1.11
 
-RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio/repo/epel-7/group_maistra-prometheus-epel-7.repo -o /etc/yum.repos.d/openshift-istio-prometheus-epel-7.repo && \
+RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo -o /etc/yum.repos.d/maistra-1.1-epel-8.repo && \
     microdnf update -y && \
-    microdnf install -y prometheus-2.7.2 && \
+    microdnf install -y prometheus && \
     microdnf clean all
 
 RUN mkdir -p /prometheus && \
