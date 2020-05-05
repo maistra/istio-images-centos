@@ -2,14 +2,14 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-pilot-container"
 LABEL name="maistra/pilot-ubi8"
-LABEL version="1.1.0"
+LABEL version="1.1.1"
 LABEL istio_version="1.4.6"
 LABEL summary="Red Hat Istio Pilot OpenShift container image"
 LABEL description="Red Hat Istio Pilot OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Pilot"
 LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
-LABEL io.openshift.expose-services="15003:tcp,15005:tcp,15007:tcp,1.1.0:tcp,15011:tcp,8080:tcp,9093:tcp"
+LABEL io.openshift.expose-services="15003:tcp,15005:tcp,15007:tcp,15010:tcp,15011:tcp,8080:tcp,9093:tcp"
 ENV container="oci"
 ENV ISTIO_VERSION=1.4.6
 
