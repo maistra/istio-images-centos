@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-proxy-init-container"
 LABEL name="maistra/proxy-init-ubi8"
-LABEL version="1.1.0"
+LABEL version="1.1.1"
 LABEL istio_version="1.4.6"
 LABEL summary="Maistra Proxy Init OpenShift container image"
 LABEL description="Maistra Proxy Init OpenShift container image"

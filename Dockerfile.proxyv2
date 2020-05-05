@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
-LABEL version="1.1.0"
+LABEL version="1.1.1"
 LABEL istio_version="1.4.6"
 LABEL summary="Maistra Proxy V2 OpenShift container image"
 LABEL description="Maistra Istio Proxy V2 OpenShift container image"
@@ -18,7 +18,7 @@ ENV ISTIO_META_ISTIO_PROXY_VERSION "1.4.6"
 # Environment variable indicating the exact proxy sha - for debugging or version-specific configs
 ENV ISTIO_META_ISTIO_PROXY_SHA b2327e0e1789451b65cf4af6a98d302c4a857f07
 # Environment variable indicating the exact build, for debugging
-ENV ISTIO_META_ISTIO_VERSION maistra-1.1.0
+ENV ISTIO_META_ISTIO_VERSION maistra-1.1.1
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo -o /etc/yum.repos.d/maistra-1.1-epel-8.repo
 
