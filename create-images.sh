@@ -155,7 +155,20 @@ fi
 if [ -n "${BUILD}" ]; then
 	for image in ${IMAGES}; do
 		echo "Building ${image}..."
-		${CONTAINER_CLI} build --no-cache -t $(get_image_name $image) -f Dockerfile.${image} .
+		args=""
+		if [ -n "${REPO}" ]; then
+			args="--build-arg REPO=${REPO}"
+		fi
+		if [ -n "${VERSION}" ]; then
+			args="${args} --build-arg VERSION=${VERSION}"
+		fi
+		if [ -n "${PROXY_VERSION}" ]; then
+			args="${args} --build-arg PROXY_VERSION=${PROXY_VERSION}"
+		fi
+		if [ -n "${GRAFANA_VERSION}" ]; then
+			args="${args} --build-arg GRAFANA_VERSION=${GRAFANA_VERSION}"
+		fi
+		${CONTAINER_CLI} build --no-cache ${args} -t $(get_image_name $image) -f Dockerfile.${image} .
 		echo "Done"
 		echo
 	done
