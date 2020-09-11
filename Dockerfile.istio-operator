@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 LABEL com.redhat.component="maistra-istio-operator"
 LABEL name="maistra/istio-ubi8-operator"
 LABEL version="1.1.8"
-LABEL istio_version="1.4.8"
+LABEL istio_version="1.4.10"
 LABEL summary="Red Hat Istio Operator OpenShift container image"
 LABEL description="Red Hat Istio Operator OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Operator"
@@ -11,7 +11,7 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services=""
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.4.8
+ENV ISTIO_VERSION=1.4.10
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo -o /etc/yum.repos.d/maistra-1.1-epel-8.repo && \
     microdnf update -y && \
