@@ -13,12 +13,10 @@ LABEL io.openshift.expose-services=""
 ENV container="oci"
 ENV ISTIO_VERSION=1.4.10
 
-# Environment variables indicating this proxy's version/capabilities as opaque string
-ENV ISTIO_META_ISTIO_PROXY_VERSION "1.4.10"
 # Environment variable indicating the exact proxy sha - for debugging or version-specific configs
 ENV ISTIO_META_ISTIO_PROXY_SHA ae5c56fd21eec2c22c3241b83c50695787a0468d
-# Environment variable indicating the exact build, for debugging
-ENV ISTIO_META_ISTIO_VERSION maistra-1.1.8
+# Environment variables indicating this proxy's version/capabilities as opaque string
+ENV ISTIO_META_ISTIO_VERSION "1.4.10"
 
 RUN curl -Ls https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo -o /etc/yum.repos.d/maistra-1.1-epel-8.repo
 
