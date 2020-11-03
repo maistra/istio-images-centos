@@ -1,12 +1,12 @@
 FROM quay.io/openshift/origin-must-gather:4.1
 
-ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo
-ARG VERSION=1.1.1
+ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
+ARG VERSION=2.0.0
 
 LABEL com.redhat.component="maistra-istio-must-gather"
 LABEL name="maistra/istio-must-gather"
 LABEL version="${VERSION}"
-LABEL istio_version="1.4.6"
+LABEL istio_version="2.0.0"
 LABEL summary="Red Hat Istio Must Gather OpenShift container image"
 LABEL description="Red Hat Istio Must Gather OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Istio Must Gather"
@@ -14,7 +14,7 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services=""
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.4.6
+ENV ISTIO_VERSION=2.0.0
 
 # Save original gather script
 RUN mv /usr/bin/gather /usr/bin/gather_original

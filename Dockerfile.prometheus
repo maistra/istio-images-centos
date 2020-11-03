@@ -1,12 +1,12 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
-ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo
-ARG VERSION=1.1.1
+ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
+ARG VERSION=2.14.0
 
 LABEL com.redhat.component="maistra-prometheus-container"
 LABEL name="maistra/prometheus-ubi8"
 LABEL version="${VERSION}"
-LABEL istio_version="1.4.6"
+LABEL istio_version="2.0.0"
 LABEL summary="Red Hat Prometheus OpenShift container image"
 LABEL description="Red Hat Prometheus OpenShift container image"
 LABEL io.k8s.display-name="Red Hat Prometheus"
@@ -14,7 +14,7 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services="9090"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION=1.4.6
+ENV ISTIO_VERSION=2.0.0
 
 RUN curl -Ls ${REPO} -o /etc/yum.repos.d/maistra.repo && \
     microdnf update -y && \
