@@ -1,12 +1,12 @@
 FROM centos:7
 
-ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.1/repo/epel-8/group_maistra-istio-1.1-epel-8.repo
-ARG VERSION=1.1.1
+ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
+ARG VERSION=2.0.0
 
 LABEL com.redhat.component="maistra-proxy-init-container"
 LABEL name="maistra/proxy-init"
 LABEL version="${VERSION}"
-LABEL istio_version="1.4.6"
+LABEL istio_version="2.0.0"
 LABEL summary="Maistra Proxy Init OpenShift container image"
 LABEL description="Maistra Proxy Init OpenShift container image"
 LABEL io.k8s.display-name="Maistra Proxy Init"
@@ -14,7 +14,7 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services=""
 ENV container="oci"
-ENV ISTIO_VERSION=1.4.6
+ENV ISTIO_VERSION=2.0.0
 
 RUN yum upgrade -y && \
     yum install -y iptables iproute && \
