@@ -14,8 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-MUST_GATHER=${MUST_GATHER:-/usr/bin/openshift-must-gather}
 BASE_COLLECTION_PATH="/must-gather"
+
+# The following CRDs are not managed by the Maistra operator but it
+# will create instances of them.
+DEPENDENCY_CRS="jaegers.jaegertracing.io kialis.kiali.io"
 
 # Auxiliary function that adds a k8s prefix to a resource
 # $1: The prefix - e.g. "ns" or "pod"
@@ -143,6 +146,9 @@ function main() {
     local members=$(getMembers ${cp})
       resources+="$(addResourcePrefix ns ${members})"
       getSynchronization ${cp}
+      for cr in ${DEPENDENCY_CRS}; do
+        oc adm inspect "--dest-dir=${BASE_COLLECTION_PATH}" ${resource}
+      done
 
        #collect Envoy configuration first from control plane pods and then from members
        getEnvoyConfigForPodsInNamespace ${cp} ${cp}
@@ -158,14 +164,14 @@ function main() {
   for resource in ${resources}; do
     echo
     echo "Dumping resource ${resource}..."
-    ${MUST_GATHER} inspect ${resource}
+    oc adm inspect "--dest-dir=${BASE_COLLECTION_PATH}" ${resource}
   done
 
   # Get all CRD's
   for crd in ${crds}; do
     echo
     echo "Dumping CRD ${crd}..."
-    ${MUST_GATHER} inspect --all-namespaces ${crd}
+    oc adm inspect "--dest-dir=${BASE_COLLECTION_PATH}" --all-namespaces ${crd}
   done
 
   echo
