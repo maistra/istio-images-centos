@@ -1,4 +1,4 @@
-FROM quay.io/openshift/origin-must-gather:4.1
+FROM quay.io/openshift/origin-must-gather:4.6
 
 ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
 ARG VERSION=2.0.0
