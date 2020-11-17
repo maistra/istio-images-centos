@@ -2,7 +2,6 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
 ARG VERSION=2.0.0
-ARG GRAFANA_VERSION=6.4.3
 
 LABEL com.redhat.component="maistra-grafana-container"
 LABEL name="maistra/grafana-ubi8"
@@ -19,7 +18,7 @@ ENV ISTIO_VERSION=2.0.0
 
 RUN curl -Ls ${REPO} -o /etc/yum.repos.d/maistra.repo && \
     microdnf update -y && \
-    microdnf install -y grafana-${GRAFANA_VERSION} grafana-prometheus-${GRAFANA_VERSION} && \
+    microdnf install -y grafana grafana-prometheus && \
     microdnf clean all
 
 ENV GF_PATHS_HOME="/usr/share/grafana"
