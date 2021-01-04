@@ -1,3 +1,7 @@
+# Issues for this repository are disabled
+
+Issues for this repository are tracked in Red Hat Jira. Please head to <https://issues.redhat.com/browse/MAISTRA> in order to browse or open an issue.
+
 # Dockerfiles for CentOS based images of Istio
 
 Images are on [Docker Hub](https://hub.docker.com/u/maistra/).
