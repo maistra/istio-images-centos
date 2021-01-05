@@ -2,7 +2,6 @@
 
 set -e
 
-HUB="docker.io/maistra"
 DEFAULT_IMAGES="pilot mixer proxy-init proxy-init-centos7 proxyv2 istio-must-gather istio-cni prometheus grafana istio-operator"
 
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
@@ -10,11 +9,25 @@ ISTIO_REPO=${ISTIO_REPO:-"https://github.com/Maistra/istio.git"}
 ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-1.1"}
 
 CONTAINER_CLI=${CONTAINER_CLI:-docker}
+HUB="docker.io/maistra"
+
+function cli_is_podman() {
+  return $([ "${CONTAINER_CLI}" = "podman" ] || ([ "${CONTAINER_CLI}" = "docker" ] && docker --version | grep -q podman))
+
+}
+#Podman and Docker report the HUB differently in docker images. Podman reports it with the "docker.io", and docker automatically strips it
+function set_proper_hub() {
+  if ! cli_is_podman; then
+    echo "Using Docker"
+    HUB="maistra"
+  fi
+
+}
 
 function verify_podman() {
   [ "${EUID}" == "0" ] && return
 
-  if [ "${CONTAINER_CLI}" = "podman" ] || ([ "${CONTAINER_CLI}" = "docker" ] && docker --version | grep -q podman) ; then
+  if cli_is_podman; then
     echo "****************************************************************************************"
     echo
     echo "You are using podman in rootless mode. Some images may not work in this mode. Aborting."
@@ -123,6 +136,7 @@ function exec_bookinfo_images() {
   done
 }
 
+set_proper_hub
 while getopts ":t:h:i:bdpk" opt; do
 	case ${opt} in
 		t) TAG="${OPTARG}";;
