@@ -1,13 +1,13 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
-ARG VERSION=2.0.0
-ARG PROXY_VERSION=2.0.0
+ARG VERSION=2.0.1
+ARG ISTIO_VERSION=1.6.14
 
 LABEL com.redhat.component="maistra-proxyv2-container"
 LABEL name="maistra/proxyv2"
 LABEL version="${VERSION}"
-LABEL istio_version="2.0.0"
+LABEL istio_version="${ISTIO_VERSION}"
 LABEL summary="Maistra Proxy V2 OpenShift container image"
 LABEL description="Maistra Istio Proxy V2 OpenShift container image"
 LABEL io.k8s.display-name="Maistra Istio Proxy V2"
@@ -15,21 +15,21 @@ LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL io.openshift.expose-services=""
 ENV container="oci"
-ENV ISTIO_VERSION=2.0.0
+ENV ISTIO_VERSION="${ISTIO_VERSION}"
 
 # Environment variables indicating this proxy's version/capabilities as opaque string
-ENV ISTIO_META_ISTIO_PROXY_VERSION "1.6.5"
+ENV ISTIO_META_ISTIO_PROXY_VERSION "${ISTIO_VERSION}"
 # Environment variable indicating the exact proxy sha - for debugging or version-specific configs
 ENV ISTIO_META_ISTIO_PROXY_SHA b2327e0e1789451b65cf4af6a98d302c4a857f07
 # Environment variable indicating the exact build, for debugging
-ENV ISTIO_META_ISTIO_VERSION "1.6.5"
+ENV ISTIO_META_ISTIO_VERSION "${ISTIO_VERSION}"
 
 RUN curl -Ls ${REPO} -o /etc/yum.repos.d/maistra-1.1-epel-8.repo
 
 RUN mv /etc/yum.repos.d/ubi.repo /ubi.repo
 
 RUN microdnf update -y && \
-    microdnf install -y istio-proxy-${PROXY_VERSION} istio-pilot-agent-${VERSION} && \
+    microdnf install -y istio-proxy-${VERSION} istio-pilot-agent-${VERSION} && \
     microdnf clean all
 
 # pilot-agent and envoy may run with effective uid 0 in order to run envoy with
