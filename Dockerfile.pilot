@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL com.redhat.component="maistra-pilot-container"
 LABEL name="maistra/pilot-ubi8"
-LABEL version="1.1.11"
+LABEL version="1.1.12"
 LABEL istio_version="1.4.10"
 LABEL summary="Red Hat Istio Pilot OpenShift container image"
 LABEL description="Red Hat Istio Pilot OpenShift container image"
