@@ -3,11 +3,11 @@
 set -e
 
 HUB="docker.io/maistra"
-DEFAULT_IMAGES="pilot mixer proxy-init proxy-init-centos7 proxyv2 istio-must-gather istio-cni prometheus grafana istio-operator"
+DEFAULT_IMAGES="pilot proxyv2 istio-must-gather istio-cni prometheus grafana istio-operator"
 
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
-ISTIO_REPO=${ISTIO_REPO:-"https://github.com/Maistra/istio.git"}
-ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-1.1"}
+ISTIO_REPO=${ISTIO_REPO:-"https://github.com/maistra/istio.git"}
+ISTIO_BRANCH=${ISTIO_BRANCH:-"maistra-2.1"}
 
 CONTAINER_CLI=${CONTAINER_CLI:-docker}
 
@@ -100,6 +100,10 @@ function build_bookinfo() {
   pushd "${src}/ratings"
     ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
     ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-faulty:${TAG}" --build-arg service_version=v-faulty .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-delayed:${TAG}" --build-arg service_version=v-delayed .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-unavailable:${TAG}" --build-arg service_version=v-unavailable .
+    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-unhealthy:${TAG}" --build-arg service_version=v-unhealthy .
   popd
 
   pushd "${src}/mysql"
@@ -115,7 +119,7 @@ function build_bookinfo() {
 
 function exec_bookinfo_images() {
   local cmd="${1}"
-  local images="$(${CONTAINER_CLI} images | grep -E "${HUB}/examples-bookinfo.*$TAG" | awk "{OFS=\":\"; print \$1, \"$TAG\"}")"
+  local images="$(${CONTAINER_CLI} images --format "{{.Repository}}:{{.Tag}}" | grep -E "examples-bookinfo.*$TAG")"
   local image
 
   for image in ${images}; do
