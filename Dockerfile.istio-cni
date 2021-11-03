@@ -1,8 +1,8 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
-ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
-ARG VERSION=2.0.2
-ARG ISTIO_VERSION=1.6.14
+ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-2.1/repo/centos-stream-8/group_maistra-istio-2.1-centos-stream-8.repo
+ARG VERSION=2.1.0
+ARG ISTIO_VERSION=1.9.8
 
 LABEL com.redhat.component="maistra-cni"
 LABEL name="maistra/istio-cni-ubi8"
@@ -19,16 +19,9 @@ ENV ISTIO_VERSION="${ISTIO_VERSION}"
 
 RUN curl -Ls ${REPO} -o /etc/yum.repos.d/maistra.repo && \
     microdnf update -y && \
-    microdnf install -y hostname istio-cni-${VERSION} && \
+    microdnf install -y istio-cni-${VERSION} && \
     microdnf clean all
-# jq is not available in ubi8 yum repo
-RUN curl -Ls https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/bin/jq && chmod +x /usr/bin/jq
 
 WORKDIR /tmp/
 
-ENV PATH=$PATH:/opt/cni/bin
-VOLUME /opt/cni
-WORKDIR /opt/cni/bin
-CMD ["/install-cni.sh"]
-
-ENTRYPOINT [ "/install-cni.sh"]
+ENTRYPOINT [ "/usr/local/bin/install-cni"]

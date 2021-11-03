@@ -2,8 +2,8 @@
 
 set -e
 
-HUB="docker.io/maistra"
-DEFAULT_IMAGES="pilot proxyv2 istio-must-gather istio-cni prometheus grafana istio-operator"
+HUB="quay.io/maistra"
+DEFAULT_IMAGES="pilot proxyv2 istio-must-gather istio-cni prometheus grafana istio-operator ratelimit"
 
 IMAGES=${ISTIO_IMAGES:-$DEFAULT_IMAGES}
 ISTIO_REPO=${ISTIO_REPO:-"https://github.com/maistra/istio.git"}
@@ -50,7 +50,7 @@ exit 2
 }
 
 function suffix() {
-  if [ "${1}" = "istio-must-gather" -o "${1}" = "proxy-init-centos7" ]; then
+  if [ "${1}" == "istio-must-gather" ]; then
     return
   fi
 
@@ -60,7 +60,7 @@ function suffix() {
 function get_image_name() {
   local image="${1}"
 
-  if [ "${image}" = "istio-operator" ]; then
+  if [ "${image}" == "istio-operator" ]; then
     echo "${HUB}/istio-ubi8-operator:${TAG}"
   else
     echo "${HUB}/${image}$(suffix ${image}):${TAG}"

@@ -14,7 +14,7 @@ function init() {
 function update_must_gather() {
   echo "Updating must-gather..."
 
-  local url="https://raw.githubusercontent.com/Maistra/istio-must-gather/${MAISTRA_BRANCH}/gather_istio"
+  local url="https://raw.githubusercontent.com/maistra/istio-must-gather/${MAISTRA_BRANCH}/gather_istio.sh"
   local file="${ROOTDIR}/artifacts/gather_istio"
   curl -Lsf "${url}" -o "${file}" || {
     echo "Failed to download artifact ${url}"

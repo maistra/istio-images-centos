@@ -1,8 +1,8 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
-ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-1.2/repo/epel-8/group_maistra-istio-1.2-epel-8.repo
-ARG VERSION=2.0.2
-ARG ISTIO_VERSION=1.6.14
+ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-2.1/repo/centos-stream-8/group_maistra-istio-2.1-centos-stream-8.repo
+ARG VERSION=2.1.0
+ARG ISTIO_VERSION=1.9.8
 
 LABEL com.redhat.component="maistra-grafana-container"
 LABEL name="maistra/grafana-ubi8"
@@ -19,7 +19,7 @@ ENV ISTIO_VERSION="${ISTIO_VERSION}"
 
 RUN curl -Ls ${REPO} -o /etc/yum.repos.d/maistra.repo && \
     microdnf update -y && \
-    microdnf install -y grafana grafana-prometheus && \
+    microdnf install -y istio-grafana && \
     microdnf clean all
 
 ENV GF_PATHS_HOME="/usr/share/grafana"
@@ -29,8 +29,8 @@ ENV GF_PATHS_PLUGINS="/var/lib/grafana/plugins"
 ENV GF_PATHS_PROVISIONING="/etc/grafana/provisioning"
 ENV GF_PATHS_DATA="/var/lib/grafana"
 
-RUN chgrp -R 0 ${GF_PATHS_CONFIG} ${GF_PATHS_HOME} ${GF_PATHS_LOGS} ${GF_PATHS_PLUGINS} ${GF_PATHS_DATA} && \
-    chmod -R g=u ${GF_PATHS_CONFIG} ${GF_PATHS_HOME} ${GF_PATHS_LOGS} ${GF_PATHS_PLUGINS} ${GF_PATHS_DATA}
+RUN chgrp -R 0 `dirname ${GF_PATHS_CONFIG}` ${GF_PATHS_HOME} ${GF_PATHS_LOGS} ${GF_PATHS_PLUGINS} ${GF_PATHS_DATA} && \
+    chmod -R g=u `dirname ${GF_PATHS_CONFIG}` ${GF_PATHS_HOME} ${GF_PATHS_LOGS} ${GF_PATHS_PLUGINS} ${GF_PATHS_DATA}
 
 EXPOSE 3000
 WORKDIR $GF_PATHS_HOME
