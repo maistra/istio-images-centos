@@ -97,16 +97,18 @@ function get_image_name() {
       echo "${HUB}/istio-ubi8-operator:${TAG}"
       ;;
     "ratelimit")
-      echo "${HUB}/${image}$(suffix ${image})"
+      echo "${HUB}/${image}$(suffix "${image}")"
       ;;
     *)
-      echo "${HUB}/${image}$(suffix ${image}):${TAG}"
+      echo "${HUB}/${image}$(suffix "${image}"):${TAG}"
       ;;
   esac
 }
 
 function build_bookinfo() {
-  local dir="$(mktemp -d)"
+  local dir
+
+  dir="$(mktemp -d)"
   ${GIT} clone --depth=1 -b "${ISTIO_BRANCH}" "${ISTIO_REPO}" "${dir}"
 
   local src="${dir}/samples/bookinfo/src"
@@ -157,8 +159,10 @@ function build_bookinfo() {
 
 function exec_bookinfo_images() {
   local cmd="${1}"
-  local images="$(${CONTAINER_CLI} images --format "{{.Repository}}:{{.Tag}}" | grep -E "examples-bookinfo.*$TAG")"
+  local images
   local image
+
+  images="$(${CONTAINER_CLI} images --format "{{.Repository}}:{{.Tag}}" | grep -E "examples-bookinfo.*$TAG")"
 
   echo "$images"
   for image in ${images}; do
@@ -178,62 +182,63 @@ function get_repo() {
 function exec_build() {
   if [ $# -ne 2 ]; then
     echo "ERROR"
-    echo "Usage: exec_build COMPONENT_NAME BUILD|PUSH"
+    echo "Usage: exec_build COMPONENT_NAME build|push"
     exit 1
   fi
 
-  if [ $2 != "BUILD" ] && [ $2 != "PUSH" ]; then
+  if [ "$2" != "build" ] && [ "$2" != "push" ]; then
     echo "ERROR"
-    echo "Usage: exec_build COMPONENT_NAME BUILD|PUSH"
+    echo "Usage: exec_build COMPONENT_NAME build|push"
     exit 1
   fi
 
   local component=$1
 
-  local PUSH=false
-  if [ $2 == "PUSH" ]; then
-    PUSH=true
+  local push=false
+  if [ "$2" == "push" ]; then
+    push=true
   fi
 
-  local image="$(get_image_name ${component})"
+  local image
+  image="$(get_image_name "${component}")"
   case ${component} in
     "istio")
       ${GIT} checkout ${ISTIO_BRANCH}
 
       make_target="maistra-image"
-      if ${PUSH}; then
+      if ${push}; then
         make_target="maistra-image.push"
       fi
-      make_vars="HUB=${HUB} TAG=${TAG}"
+      make_vars=("HUB=${HUB}" "TAG=${TAG}")
       ;;
     "istio-must-gather")
       #TODO: delete this sed when podman will be a variable (cf. https://github.com/maistra/istio-must-gather/blob/maistra-2.2/Makefile#L23-L27)
-      sed -i -e "s/podman/${CONTAINER_CLI}/g" ${REPOSDIR}/${component}/Makefile 
+      sed -i -e "s/podman/${CONTAINER_CLI}/g" "${REPOSDIR}/${component}/Makefile"
 
       make_target="image"
-      if ${PUSH}; then
+      if ${push}; then
         make_target="push"
       fi
-      make_vars="HUB=${HUB} TAG=${TAG}"
+      make_vars=("HUB=${HUB}" "TAG=${TAG}")
       ;;
     "istio-operator")
       echo "${REPOSDIR}/${component} - ${MAKE} IMAGE=${image} image"
-      ${MAKE} IMAGE=${image} image
-      if ${PUSH}; then
-        ${CONTAINER_CLI} push ${image}
+      ${MAKE} IMAGE="${image}" image
+      if ${push}; then
+        ${CONTAINER_CLI} push "${image}"
       fi
       ;;
     "ratelimit")
       make_target="docker_image"
-      if ${PUSH}; then
+      if ${push}; then
         make_target="docker_push"
       fi
-      make_vars="IMAGE=${image} VERSION=${TAG}"
+      make_vars=("IMAGE=${image}" "VERSION=${TAG}")
       ;;
     "prometheus")
-      cp ${DIR}/Dockerfile.prometheus ${REPOSDIR}/${component}/Dockerfile.maistra
-      ${CONTAINER_CLI} build ${REPOSDIR}/${component} -f Dockerfile.maistra -t ${image}
-      if ${PUSH}; then
+      cp "${DIR}/Dockerfile.prometheus" "${REPOSDIR}/${component}/Dockerfile.maistra"
+      ${CONTAINER_CLI} build "${REPOSDIR}/${component}" -f Dockerfile.maistra -t "${image}"
+      if ${push}; then
         ${CONTAINER_CLI} push "${image}"
       fi
       ;;
@@ -244,7 +249,7 @@ function exec_build() {
 
   #Istio-operator and Prometheus builds are specific
   if [ "${component}" != "prometheus" ] && [ "${component}" != "istio-operator" ]; then
-    ${MAKE} ${make_vars} ${make_target}
+    ${MAKE} "${make_vars[@]}" ${make_target}
   fi
 }
 
@@ -272,11 +277,11 @@ if [ -n "${DELETE}" ]; then
 	for image in ${IMAGES}; do
 		echo "Deleting image ${image}..."
     if [ "${image}" == "ratelimit" ]; then
-      image_name="$(get_image_name $image):${TAG}"
+      image_name="$(get_image_name "$image"):${TAG}"
     else
-      image_name="$(get_image_name $image)"
+      image_name="$(get_image_name "$image")"
     fi
-		${CONTAINER_CLI} rmi ${image_name}
+		${CONTAINER_CLI} rmi "${image_name}"
 	done
 
 	if [ -n "${BOOKINFO}" ]; then
@@ -285,24 +290,25 @@ if [ -n "${DELETE}" ]; then
 fi
 
 if [ -n "${BUILD}" ] || [ -n "${PUSH}" ]; then
-  # Create temp working dir
-  [ ! -d ${REPOSDIR} ] && mkdir "${REPOSDIR}"
-  cd ${REPOSDIR}
+  [ ! -d "${REPOSDIR}" ] && mkdir "${REPOSDIR}"
+  trap '${RM} -rf "${REPOSDIR}"' EXIT
+  
+  cd "${REPOSDIR}"
 
-  for component in ${COMPONENTS[@]}; do
+  for component in ${COMPONENTS}; do
     echo "[${component}] Clone the git repository "
-    get_repo ${component}
+    get_repo "${component}"
 
-    cd ${REPOSDIR}/${component}
+    cd "${REPOSDIR}/${component}"
     if [ -n "${BUILD}" ]; then
       echo "[${component}] Execute the container image build"
-      exec_build ${component} "BUILD"
+      exec_build "${component}" "build"
     fi
     if [ -n "${PUSH}" ]; then
       echo "[${component}] Execute the build and push container image build"
-      exec_build ${component} "PUSH"
+      exec_build "${component}" "push"
     fi
-    cd ${REPOSDIR}/
+    cd "${REPOSDIR}/"
     echo "Done"
     echo
   done
@@ -313,9 +319,4 @@ if [ -n "${BUILD}" ] || [ -n "${PUSH}" ]; then
       exec_bookinfo_images push
     fi
   fi
-  
-  # Delete tmp working dir
-  echo "Deleting ${DIR}"
-  cd "${DIR}"
-  [ -d ${REPOSDIR} ] && ${RM} -rf "${REPOSDIR}"
 fi
