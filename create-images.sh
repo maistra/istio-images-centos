@@ -7,10 +7,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 : "${MAISTRA_PROJECT:=https://github.com/maistra}"
 
 : "${HUB:=quay.io/maistra}"
-: "${TAG:=2.3.0}"
+: "${TAG:=2.2.2}"
 
 : "${ISTIO_REPO:="${MAISTRA_PROJECT}/istio.git"}"
-: "${ISTIO_BRANCH:="maistra-2.3"}"
+: "${ISTIO_BRANCH:="maistra-2.2"}"
 
 : "${REPOSDIR:="${DIR}/tmp"}"
 
