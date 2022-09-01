@@ -9,7 +9,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 : "${HUB:=quay.io/maistra}"
 : "${TAG:=2.3.0}"
 
-: "${ISTIO_REPO:="https://github.com/maistra/istio.git"}"
+: "${ISTIO_REPO:="${MAISTRA_PROJECT}/istio.git"}"
 : "${ISTIO_BRANCH:="maistra-2.3"}"
 
 : "${REPOSDIR:="${DIR}/tmp"}"
@@ -202,7 +202,7 @@ function exec_build() {
   local image
   image="$(get_image_name "${component}")"
   case ${component} in
-    "istio")
+    "istio"|"maistra-istio"|"istio-maistra") #Possibility to test with other Maistra Istio names (ex: forked repos)
       ${GIT} checkout ${ISTIO_BRANCH}
 
       make_target="maistra-image"
@@ -291,7 +291,7 @@ fi
 
 if [ -n "${BUILD}" ] || [ -n "${PUSH}" ]; then
   [ ! -d "${REPOSDIR}" ] && mkdir "${REPOSDIR}"
-  trap '${RM} -rf "${REPOSDIR}"' EXIT
+  trap 'echo "Removing ${REPOSDIR}" && ${RM} -rf "${REPOSDIR}"' EXIT
   
   cd "${REPOSDIR}"
 
