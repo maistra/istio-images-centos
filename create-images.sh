@@ -229,9 +229,10 @@ function exec_build() {
       fi
       ;;
     "ratelimit")
-      make_target="docker_image"
+      ${GIT} checkout ${ISTIO_BRANCH}
+      make_target="docker_image_without_tests"
       if ${push}; then
-        make_target="docker_push"
+        make_target="docker_push_without_tests"
       fi
       make_vars=("IMAGE=${image}" "VERSION=${TAG}")
       ;;
