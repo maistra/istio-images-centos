@@ -1,5 +1,4 @@
-#FIXME: Choose the right gobuilder image for Maistra context
-FROM registry.redhat.io/ubi8/go-toolset:1.17.12-3 AS builder
+FROM quay.io/maistra-dev/maistra-builder:2.3 AS builder
 WORKDIR /go/src/github.com/prometheus/prometheus
 COPY . .
 RUN make common-build
