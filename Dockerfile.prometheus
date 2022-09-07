@@ -1,26 +1,32 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+FROM quay.io/maistra-dev/maistra-builder:2.2 AS builder
+WORKDIR /go/src/github.com/prometheus/prometheus
+COPY . .
+RUN make common-build
 
-ARG REPO=https://copr.fedorainfracloud.org/coprs/g/maistra/istio-2.1/repo/centos-stream-8/group_maistra-istio-2.1-centos-stream-8.repo
-ARG VERSION=2.1.0
-ARG ISTIO_VERSION=1.9.8
+FROM quay.io/centos/centos:stream8 as centos
 
-LABEL com.redhat.component="maistra-prometheus-container"
-LABEL name="maistra/prometheus-ubi8"
-LABEL version="${VERSION}"
-LABEL istio_version="${ISTIO_VERSION}"
-LABEL summary="Red Hat Prometheus OpenShift container image"
-LABEL description="Red Hat Prometheus OpenShift container image"
-LABEL io.k8s.display-name="Red Hat Prometheus"
+ARG FROM_DIRECTORY=/go/src/github.com/prometheus/prometheus
+
+LABEL com.redhat.component="openshift-istio-prometheus-ubi-container"
+LABEL name="openshift-service-mesh/prometheus-rhel8"
+LABEL version="${CI_VERSION}"
+LABEL istio_version="1.12.9"
+LABEL summary="Maistra Prometheus OpenShift container image"
+LABEL description="Maistra Prometheus OpenShift container image"
+LABEL io.k8s.display-name="Maistra Prometheus"
 LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services="9090"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION="${ISTIO_VERSION}"
+ENV ISTIO_VERSION="1.12.9"
 
-RUN curl -Ls ${REPO} -o /etc/yum.repos.d/maistra.repo && \
-    microdnf update -y && \
-    microdnf install -y istio-prometheus && \
-    microdnf clean all
+RUN dnf update -y && dnf clean all
+
+COPY --from=builder ${FROM_DIRECTORY}/prometheus                            /usr/local/bin/prometheus
+COPY --from=builder ${FROM_DIRECTORY}/promtool                              /usr/local/bin/promtool
+COPY --from=builder ${FROM_DIRECTORY}/documentation/examples/prometheus.yml /etc/prometheus/prometheus.yml
+COPY --from=builder ${FROM_DIRECTORY}/console_libraries/                    /usr/share/prometheus/console_libraries/
+COPY --from=builder ${FROM_DIRECTORY}/consoles/                             /usr/share/prometheus/consoles/
 
 RUN mkdir -p /prometheus && \
     chgrp -R 0 /prometheus && \
@@ -28,7 +34,7 @@ RUN mkdir -p /prometheus && \
 
 EXPOSE     9090
 WORKDIR /prometheus
-ENTRYPOINT [ "/bin/prometheus" ]
+ENTRYPOINT [ "/usr/local/bin/prometheus" ]
 CMD        [ "--config.file=/etc/prometheus/prometheus.yml", \
              "--storage.tsdb.path=/prometheus", \
              "--web.console.libraries=/usr/share/prometheus/console_libraries", \
