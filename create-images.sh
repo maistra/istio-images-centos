@@ -4,13 +4,15 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
+: "${MAISTRA_VERSION:=2.3}"
+
 : "${MAISTRA_PROJECT:=https://github.com/maistra}"
 
 : "${HUB:=quay.io/maistra}"
-: "${TAG:=2.3.0}"
+: "${TAG:="${MAISTRA_VERSION}"}"
 
 : "${ISTIO_REPO:="${MAISTRA_PROJECT}/istio.git"}"
-: "${ISTIO_BRANCH:="maistra-2.3"}"
+: "${ISTIO_BRANCH:="maistra-${MAISTRA_VERSION}"}"
 
 : "${REPOSDIR:="${DIR}/tmp"}"
 
@@ -60,7 +62,7 @@ function usage() {
 	cat <<EOF
 Usage: ${BASH_SOURCE[0]} [options ...]"
 	options:
-		-t <TAG>    TAG to use for operations on images, required.
+		-t <TAG>    TAG to use for operations on images. Defaults to "${TAG}". Special tag 'DAILY' will be replaced with today's date in the format ${MAISTRA_VERSION}-yyy-mm-dd
 		-h <HUB>    Docker hub + username. Defaults to "${HUB}"
 		-c <COMPONENTS> Specify which Maistra components should be built
 		-i <IMAGES> Specify which images should be deleted
@@ -271,6 +273,10 @@ done
 
 [[ -z "${TAG}" ]] && usage "Missing TAG"
 [[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
+
+if [ "${TAG}" == "DAILY" ]; then
+  TAG="${MAISTRA_VERSION}-$(date +%Y-%m-%d)"
+fi
 
 verify_podman
 
