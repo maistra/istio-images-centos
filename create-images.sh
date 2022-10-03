@@ -62,7 +62,7 @@ function usage() {
 	cat <<EOF
 Usage: ${BASH_SOURCE[0]} [options ...]"
 	options:
-		-t <TAG>    TAG to use for operations on images. Defaults to "${TAG}". Special tag 'DAILY' will be replaced with today's date in the format ${MAISTRA_VERSION}-yyy-mm-dd
+		-t <TAG>    TAG to use for operations on images. Defaults to "${TAG}". Special tag 'DAILY' will be replaced with today's date in the format ${MAISTRA_VERSION}-daily-yyyy-mm-dd
 		-h <HUB>    Docker hub + username. Defaults to "${HUB}"
 		-c <COMPONENTS> Specify which Maistra components should be built
 		-i <IMAGES> Specify which images should be deleted
@@ -275,7 +275,7 @@ done
 [[ -z "${BUILD}" && -z "${DELETE}" && -z "${PUSH}" ]] && usage
 
 if [ "${TAG}" == "DAILY" ]; then
-  TAG="${MAISTRA_VERSION}-$(date +%Y-%m-%d)"
+  TAG="${MAISTRA_VERSION}-daily-$(date +%Y-%m-%d)"
 fi
 
 verify_podman
