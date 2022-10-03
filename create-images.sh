@@ -8,7 +8,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 : "${MAISTRA_PROJECT:=https://github.com/maistra}"
 
-: "${HUB:=quay.io/maistra}"
+: "${HUB:=quay.io/maistra-dev}"
 : "${TAG:="${MAISTRA_VERSION}"}"
 
 : "${ISTIO_REPO:="${MAISTRA_PROJECT}/istio.git"}"
