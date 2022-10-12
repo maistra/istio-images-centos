@@ -116,44 +116,49 @@ function build_bookinfo() {
   local src="${dir}/samples/bookinfo/src"
 
   pushd "${src}/productpage"
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-productpage-v1:${TAG}" .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-productpage-v1:${TAG}" .
+    #flooding
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-productpage-v-flooding:${TAG}" --build-arg flood_factor=100 .
   popd
 
   pushd "${src}/details"
     #plain build -- no calling external book service to fetch topics
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-details-v1:${TAG}" --build-arg service_version=v1 .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-details-v1:${TAG}" --build-arg service_version=v1 .
     #with calling external book service to fetch topic for the book
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-details-v2:${TAG}" --build-arg service_version=v2 --build-arg enable_external_book_service=true .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-details-v2:${TAG}" --build-arg service_version=v2 \
+    --build-arg enable_external_book_service=true .
   popd
 
   pushd "${src}/reviews"
     #java build the app.
-    ${CONTAINER_CLI} run --rm -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
+    ${CONTAINER_CLI} run --rm -u root -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
     pushd reviews-wlpcfg
       #plain build -- no ratings
-      ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-reviews-v1:${TAG}" --build-arg service_version=v1 .
+      ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-reviews-v1:${TAG}" --build-arg service_version=v1 .
       #with ratings black stars
-      ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-reviews-v2:${TAG}" --build-arg service_version=v2 --build-arg enable_ratings=true .
+      ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-reviews-v2:${TAG}" --build-arg service_version=v2 \
+      --build-arg enable_ratings=true .
       #with ratings red stars
-      ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 --build-arg enable_ratings=true --build-arg star_color=red .
+      ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 \
+      --build-arg enable_ratings=true --build-arg star_color=red .
     popd
   popd
 
   pushd "${src}/ratings"
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-faulty:${TAG}" --build-arg service_version=v-faulty .
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-delayed:${TAG}" --build-arg service_version=v-delayed .
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-unavailable:${TAG}" --build-arg service_version=v-unavailable .
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-ratings-v-unhealthy:${TAG}" --build-arg service_version=v-unhealthy .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-ratings-v-faulty:${TAG}" --build-arg service_version=v-faulty .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-ratings-v-delayed:${TAG}" --build-arg service_version=v-delayed .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-ratings-v-unavailable:${TAG}" --build-arg service_version=v-unavailable .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-ratings-v-unhealthy:${TAG}" --build-arg service_version=v-unhealthy .
   popd
 
   pushd "${src}/mysql"
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-mysqldb:${TAG}" .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-mysqldb:${TAG}" .
   popd
 
   pushd "${src}/mongodb"
-    ${CONTAINER_CLI} build -t "${HUB}/examples-bookinfo-mongodb:${TAG}" .
+    ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-mongodb:${TAG}" .
   popd
 
   rm -rf "${dir}"
