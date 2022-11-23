@@ -4,7 +4,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-: "${MAISTRA_VERSION:=2.3}"
+: "${MAISTRA_VERSION:=2.4}"
 
 : "${MAISTRA_PROJECT:=https://github.com/maistra}"
 
