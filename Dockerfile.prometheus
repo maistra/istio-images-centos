@@ -1,4 +1,4 @@
-FROM quay.io/maistra-dev/maistra-builder:2.3 AS builder
+FROM quay.io/maistra-dev/maistra-builder:2.4 AS builder
 WORKDIR /go/src/github.com/prometheus/prometheus
 COPY . .
 RUN make common-build
@@ -9,8 +9,8 @@ ARG FROM_DIRECTORY=/go/src/github.com/prometheus/prometheus
 
 LABEL com.redhat.component="openshift-istio-prometheus-ubi-container"
 LABEL name="openshift-service-mesh/prometheus-rhel8"
-LABEL version="${CI_VERSION}"
-LABEL istio_version="1.12.9"
+LABEL version="2.4.0"
+LABEL istio_version="1.16.0"
 LABEL summary="Maistra Prometheus OpenShift container image"
 LABEL description="Maistra Prometheus OpenShift container image"
 LABEL io.k8s.display-name="Maistra Prometheus"
@@ -18,7 +18,7 @@ LABEL io.openshift.tags="istio"
 LABEL io.openshift.expose-services="9090"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 ENV container="oci"
-ENV ISTIO_VERSION="1.12.9"
+ENV ISTIO_VERSION="1.16.0"
 
 RUN dnf update -y && dnf clean all
 
