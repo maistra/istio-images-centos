@@ -142,6 +142,7 @@ function build_bookinfo() {
       ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 \
       --build-arg enable_ratings=true --build-arg star_color=red .
     popd
+    ${CONTAINER_CLI} run --rm -u root -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 sh -c 'gradle clean ; rm -rf .gradle'
   popd
 
   pushd "${src}/ratings"
@@ -161,7 +162,7 @@ function build_bookinfo() {
     ${CONTAINER_CLI} build --pull -t "${HUB}/examples-bookinfo-mongodb:${TAG}" .
   popd
 
-  rm -rf "${dir}"
+  ${RM} -rf "${dir}"
 }
 
 function exec_bookinfo_images() {
@@ -210,7 +211,7 @@ function exec_build() {
   image="$(get_image_name "${component}")"
   case ${component} in
     "istio"|"maistra-istio"|"istio-maistra") #Possibility to test with other Maistra Istio names (ex: forked repos)
-      ${GIT} checkout ${ISTIO_BRANCH}
+      ${GIT} checkout "${ISTIO_BRANCH}"
 
       make_target="maistra-image"
       if ${push}; then
@@ -236,7 +237,7 @@ function exec_build() {
       fi
       ;;
     "ratelimit")
-      ${GIT} checkout ${ISTIO_BRANCH}
+      ${GIT} checkout "${ISTIO_BRANCH}"
       make_target="docker_image_without_tests"
       if ${push}; then
         make_target="docker_push_without_tests"
@@ -257,7 +258,7 @@ function exec_build() {
 
   #Istio-operator and Prometheus builds are specific
   if [ "${component}" != "prometheus" ] && [ "${component}" != "istio-operator" ]; then
-    ${MAKE} "${make_vars[@]}" ${make_target}
+    ${MAKE} "${make_vars[@]}" "${make_target}"
   fi
 }
 
