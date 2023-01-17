@@ -244,6 +244,8 @@ function exec_build() {
       make_vars=("IMAGE=${image}" "VERSION=${TAG}")
       ;;
     "prometheus")
+      # This is the last maintained branch
+      ${GIT} checkout "maistra-2.1"
       cp "${DIR}/Dockerfile.prometheus" "${REPOSDIR}/${component}/Dockerfile.maistra"
       ${CONTAINER_CLI} build "${REPOSDIR}/${component}" -f Dockerfile.maistra -t "${image}"
       if ${push}; then
