@@ -43,6 +43,8 @@ DEFAULT_IMAGES=(
 
 IMAGES="${ISTIO_IMAGES:-${DEFAULT_IMAGES[@]}}"
 
+PUSH_LATEST="${PUSH_LATEST:-false}"
+
 function verify_podman() {
   [ "${EUID}" == "0" ] && return
 
@@ -264,6 +266,24 @@ function exec_build() {
   fi
 }
 
+function push_latest_tag() {
+  if [ "${PUSH_LATEST}" != "true" ] || [ -z "${PUSH}" ]; then
+    return
+  fi
+
+  local images
+  local image
+  local repo
+  local latest_tag="${MAISTRA_VERSION}-latest"
+
+  images="$(${CONTAINER_CLI} images --format "{{.Repository}}:{{.Tag}}" | grep -E ".*$TAG")"
+  for image in ${images}; do
+    repo=$(echo "${image}" | cut -d: -f1)
+    ${CONTAINER_CLI} tag "${image}" "${repo}:${latest_tag}"
+    ${CONTAINER_CLI} push "${repo}:${latest_tag}"
+  done
+}
+
 ## MAIN
 while getopts ":t:h:i:c:bdpk" opt; do
 	case ${opt} in
@@ -284,6 +304,7 @@ done
 
 if [ "${TAG}" == "DAILY" ]; then
   TAG="${MAISTRA_VERSION}-daily-$(date +%Y-%m-%d)"
+  PUSH_LATEST="true"
 fi
 
 verify_podman
@@ -335,3 +356,5 @@ if [ -n "${BUILD}" ] || [ -n "${PUSH}" ]; then
     fi
   fi
 fi
+
+push_latest_tag
