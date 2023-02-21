@@ -232,6 +232,7 @@ function exec_build() {
       make_vars=("HUB=${HUB}" "TAG=${TAG}")
       ;;
     "istio-operator")
+      ${GIT} checkout ${ISTIO_BRANCH}
       echo "${REPOSDIR}/${component} - ${MAKE} IMAGE=${image} image"
       ${MAKE} IMAGE="${image}" image
       if ${push}; then
