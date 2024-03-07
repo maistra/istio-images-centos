@@ -113,32 +113,36 @@ function build_bookinfo() {
   local dir
 
   dir="$(mktemp -d)"
-  podman machine init -v "${dir}":"${dir}"
-  podman machine start
+  #podman machine init -v "${dir}":"${dir}"
+  #podman machine start
 
   ${GIT} clone --depth=1 -b "${ISTIO_BRANCH}" "${ISTIO_REPO}" "${dir}"
 
   local src="${dir}/samples/bookinfo/src"
 
   pushd "${src}/productpage"
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-productpage-v1:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-productpage-v1:${TAG}" .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-productpage-v1:${TAG}" .
     #flooding
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-productpage-v-flooding:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-productpage-v-flooding:${TAG}" --build-arg flood_factor=100 .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-productpage-v-flooding:${TAG}" --build-arg flood_factor=100 .
   popd
 
   pushd "${src}/details"
     #plain build -- no calling external book service to fetch topics
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-details-v1:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-details-v1:${TAG}" --build-arg service_version=v1 .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-details-v1:${TAG}" --build-arg service_version=v1 .
     #with calling external book service to fetch topic for the book
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-details-v2:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-details-v2:${TAG}" --build-arg service_version=v2 \
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-details-v2:${TAG}" --build-arg service_version=v2 \
     --build-arg enable_external_book_service=true .
   popd
 
@@ -148,54 +152,65 @@ function build_bookinfo() {
     ${CONTAINER_CLI} run --rm --security-opt label=disable -u root -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
     pushd reviews-wlpcfg
       #plain build -- no ratings
+      ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-reviews-v1:${TAG}"
       ${CONTAINER_CLI} build \
-      --platform linux/arm64/v8 \
-      --pull -t "${HUB}/examples-bookinfo-reviews-v1:${TAG}" --build-arg service_version=v1 .
+      --platform linux/arm64/v8,linux/amd64 \
+      --pull --manifest "${HUB}/examples-bookinfo-reviews-v1:${TAG}" --build-arg service_version=v1 .
       #with ratings black stars
+      ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-reviews-v2:${TAG}"
       ${CONTAINER_CLI} build \
-      --platform linux/arm64/v8 \
-      --pull -t "${HUB}/examples-bookinfo-reviews-v2:${TAG}" --build-arg service_version=v2 \
+      --platform linux/arm64/v8,linux/amd64 \
+      --pull --manifest "${HUB}/examples-bookinfo-reviews-v2:${TAG}" --build-arg service_version=v2 \
       --build-arg enable_ratings=true .
       #with ratings red stars
+      ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-reviews-v3:${TAG}"
       ${CONTAINER_CLI} build \
-      --platform linux/arm64/v8 \
-      --pull -t "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 \
+      --platform linux/arm64/v8,linux/amd64 \
+      --pull --manifest "${HUB}/examples-bookinfo-reviews-v3:${TAG}" --build-arg service_version=v3 \
       --build-arg enable_ratings=true --build-arg star_color=red .
     popd
     ${CONTAINER_CLI} run --rm --security-opt label=disable -u root -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 sh -c 'gradle clean ; rm -rf .gradle'
   popd
 
   pushd "${src}/ratings"
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-ratings-v1:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-ratings-v1:${TAG}" --build-arg service_version=v1 .
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-ratings-v2:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-ratings-v2:${TAG}" --build-arg service_version=v2 .
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-ratings-v-faulty:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-ratings-v-faulty:${TAG}" --build-arg service_version=v-faulty .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-ratings-v-faulty:${TAG}" --build-arg service_version=v-faulty .
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-ratings-v-delayed:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-ratings-v-delayed:${TAG}" --build-arg service_version=v-delayed .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-ratings-v-delayed:${TAG}" --build-arg service_version=v-delayed .
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-ratings-v-unavailable:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-ratings-v-unavailable:${TAG}" --build-arg service_version=v-unavailable .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-ratings-v-unavailable:${TAG}" --build-arg service_version=v-unavailable .
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-ratings-v-unhealthy:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-ratings-v-unhealthy:${TAG}" --build-arg service_version=v-unhealthy .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-ratings-v-unhealthy:${TAG}" --build-arg service_version=v-unhealthy .
   popd
 
   pushd "${src}/mysql"
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-mysqldb:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-mysqldb:${TAG}" .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-mysqldb:${TAG}" .
   popd
 
   pushd "${src}/mongodb"
+    ${CONTAINER_CLI} manifest create "${HUB}/examples-bookinfo-mongodb:${TAG}"
     ${CONTAINER_CLI} build \
-    --platform linux/arm64/v8 \
-    --pull -t "${HUB}/examples-bookinfo-mongodb:${TAG}" .
+    --platform linux/arm64/v8,linux/amd64 \
+    --pull --manifest "${HUB}/examples-bookinfo-mongodb:${TAG}" .
   popd
 
   ${RM} -rf "${dir}"
@@ -210,7 +225,7 @@ function exec_bookinfo_images() {
 
   echo "$images"
   for image in ${images}; do
-    ${CONTAINER_CLI} "${cmd}" "${image}"
+    ${CONTAINER_CLI} manifest "${cmd}" "${image}"
   done
 }
 
